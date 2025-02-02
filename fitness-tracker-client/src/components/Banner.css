@@ -1,0 +1,28 @@
+/* Add this to your CSS file */
+.slick-dots {
+    bottom: 25px;
+}
+
+.slick-dots li button:before {
+    color: white;
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #FF640D;
+    opacity: 1;
+}
+
+/* Custom arrow styles */
+.slick-prev,
+.slick-next {
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    display: none;
+}
