@@ -41,6 +41,13 @@ import PaymentCancel from "../payment/PaymentCancel";
 import PaymentError from "../payment/PaymentError";
 import SSLPaymentSuccess from "../payment/SSLPaymentSuccess";
 import SalesReport from "../pages/admin/SalesReport";
+import AddPet from "../pages/trainer/AddPet";
+import AllPets from "../pages/trainer/AllPets";
+import PetDetails from "../pages/trainer/PetDetails";
+import AdoptPet from "../pages/AdoptPet";
+import AdoptPetDetails from "../pages/AdoptPetDetails";
+import AdoptPetPayment from "../payment/AdoptPetPayment";
+import PetSalesReport from "../pages/admin/PetSalesReport";
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +89,18 @@ export const router = createBrowserRouter([
       {
         path: "/products/:id",
         element: <ClassDetails />,
+      },
+      {
+        path: "/adopt-pet",
+        element: <AdoptPet />,
+      },
+      {
+        path: "/adopt-pet/:id",
+        element: <AdoptPetDetails />,
+      },
+      {
+        path: "/adopt-pet-payment/:id",
+        element: <AdoptPetPayment />,
       },
       {
         path: "/product-payment/:id",
@@ -186,6 +205,10 @@ export const router = createBrowserRouter([
         element: <SalesReport />,
       },
       {
+        path: "/dashboard/pet-sales-report",
+        element: <PetSalesReport />,
+      },
+      {
         path: "/dashboard/all-trainers",
         element: (
           <AdminPrivateRoute>
@@ -220,6 +243,18 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/add-product",
         element: <AddClass />,
+      },
+      {
+        path: "/dashboard/all-pets",
+        element: <AllPets />,
+      },
+      {
+        path: "/dashboard/pet/:id",
+        element: <PetDetails />,
+      },
+      {
+        path: "/dashboard/add-pet",
+        element: <AddPet />,
       },
       {
         path: "/dashboard/manage-slot",

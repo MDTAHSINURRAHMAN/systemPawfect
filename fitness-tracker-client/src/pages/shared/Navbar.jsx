@@ -109,6 +109,20 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
+          to="/adopt-pet"
+          className={({ isActive }) =>
+            `text-sm tracking-[0.1rem] ${
+              isActive
+                ? "text-[#FF640D] font-bold"
+                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+            }`
+          }
+        >
+          Adopt Pet
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
           to="/all-products"
           className={({ isActive }) =>
             `text-sm tracking-[0.1rem] ${

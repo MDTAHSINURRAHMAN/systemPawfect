@@ -48,6 +48,8 @@ async function run() {
     const reviewCollection = db.collection("reviews");
     const forumCollection = db.collection("forums");
     const productPaymentCollection = db.collection("productPayments");
+    const adoptPetPaymentCollection = db.collection("adoptPetPayments");
+    const petCollection = db.collection("pets");
 
     // Create user API endpoint
     app.post("/users", async (req, res) => {
@@ -776,7 +778,6 @@ async function run() {
     // Success handler - now gets tran_id from query params if not in body
     app.post("/payment/success", async (req, res) => {
       try {
-        // Get tran_id from either body or query params
         const tran_id = req.body.tran_id || req.query.tran_id;
         console.log("Success payment data received:", { ...req.body, tran_id });
 
@@ -784,6 +785,9 @@ async function run() {
           console.error("No transaction ID found in success request");
           return res.redirect("http://localhost:5173/payment/error");
         }
+
+        // Get payment details to get product info
+        const payment = await productPaymentCollection.findOne({ tran_id });
 
         // Update payment status to completed
         const result = await productPaymentCollection.updateOne(
@@ -805,10 +809,25 @@ async function run() {
           }
         );
 
+        // First, get the current product to ensure stockQuantity is numeric
+        const product = await productCollection.findOne({
+          _id: new ObjectId(payment.productId),
+        });
+        const currentStock = parseInt(product.stockQuantity) || 0; // Convert to number or default to 0
+
+        // Then update the product with the new numeric stock quantity
+        const productResult = await productCollection.updateOne(
+          { _id: new ObjectId(payment.productId) },
+          { $set: { stockQuantity: currentStock - 1 } }
+        );
+
         console.log("Payment marked as completed:", tran_id);
 
-        if (result.modifiedCount === 0) {
-          console.error("No payment found to update:", tran_id);
+        if (result.modifiedCount === 0 || productResult.modifiedCount === 0) {
+          console.error("Failed to update payment or product:", {
+            payment: result.modifiedCount,
+            product: productResult.modifiedCount,
+          });
           return res.redirect("http://localhost:5173/payment/error");
         }
 
@@ -962,6 +981,326 @@ async function run() {
     app.get("/product-payments", async (req, res) => {
       const productPayments = await productPaymentCollection.find().toArray();
       res.json(productPayments);
+    });
+
+    // get all pets
+    app.get("/pets", async (req, res) => {
+      const pets = await petCollection.find().toArray();
+      res.json(pets);
+    });
+
+    // get pet by id
+    app.get("/pets/:id", async (req, res) => {
+      const id = req.params.id;
+      const pet = await petCollection.findOne({ _id: new ObjectId(id) });
+      res.json(pet);
+    });
+
+    // add pet
+    app.post("/pets", async (req, res) => {
+      const pet = req.body;
+      const result = await petCollection.insertOne(pet);
+      res.json(result);
+    });
+
+    // update pet
+    app.patch("/pets/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedPet = req.body;
+      const result = await petCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updatedPet }
+      );
+      res.json(result);
+    });
+
+    // delete pet
+    app.delete("/pets/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await petCollection.deleteOne({ _id: new ObjectId(id) });
+      res.json(result);
+    });
+
+    // Adopt Pet Payment Initialization
+    app.post("/adopt-pet-payment", async (req, res) => {
+      try {
+        const payment = req.body;
+        console.log("Received payment data:", payment); // Debug log
+
+        const tran_id = "ADOPT-" + new Date().getTime();
+
+        // 1. Create pending payment record in MongoDB
+        const paymentRecord = {
+          tran_id,
+          status: "pending",
+          createdAt: new Date(),
+          total_amount: payment.adoptionFee,
+          currency: payment.currency || "BDT",
+          petId: payment.petId,
+          petName: payment.petName,
+          ...payment,
+          statusHistory: [
+            {
+              status: "pending",
+              timestamp: new Date(),
+              details: "Adoption payment initiated",
+            },
+          ],
+        };
+
+        await adoptPetPaymentCollection.insertOne(paymentRecord);
+        console.log("Created pending adoption payment record:", tran_id);
+
+        // 2. Initialize SSL Commerz
+        const sslData = {
+          store_id: "pawfe679fae25324c8",
+          store_passwd: "pawfe679fae25324c8@ssl",
+          total_amount: parseFloat(payment.adoptionFee), // Convert to number
+          currency: "BDT",
+          tran_id,
+          success_url: `http://localhost:5000/adopt-payment/success?tran_id=${tran_id}`,
+          fail_url: `http://localhost:5000/adopt-payment/fail?tran_id=${tran_id}`,
+          cancel_url: `http://localhost:5000/adopt-payment/cancel?tran_id=${tran_id}`,
+          ipn_url: `http://localhost:5000/adopt-payment/ipn?tran_id=${tran_id}`,
+          shipping_method: "NO",
+          product_name: payment.petName || "Pet Adoption", // Ensure product name is not undefined
+          product_category: "Pet Adoption",
+          product_profile: "non-physical-goods",
+          cus_name: payment.cus_name,
+          cus_email: payment.cus_email,
+          cus_add1: payment.cus_add1 || "Address",
+          cus_city: payment.cus_city || "City",
+          cus_state: payment.cus_state || "State",
+          cus_postcode: payment.cus_postcode || "1234",
+          cus_country: "Bangladesh",
+          cus_phone: payment.cus_phone,
+          multi_card_name: "mastercard,visacard,amexcard",
+        };
+
+        // Validate required fields
+        if (!sslData.total_amount || !sslData.product_name) {
+          throw new Error(
+            "Missing required fields: total_amount or product_name"
+          );
+        }
+
+        console.log("Sending SSL data:", sslData); // Debug log
+
+        const response = await axios.post(
+          "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
+          new URLSearchParams(sslData).toString(),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Accept: "application/json",
+            },
+          }
+        );
+
+        console.log("SSL Commerz Response:", response.data); // Debug log
+
+        if (response.data?.GatewayPageURL) {
+          return res.json({
+            status: "success",
+            GatewayPageURL: response.data.GatewayPageURL,
+            tran_id: tran_id,
+            data: response.data,
+          });
+        } else {
+          console.error("SSL Commerz Error Response:", response.data);
+          throw new Error(
+            response.data?.failedreason || "Failed to get gateway URL"
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Adoption payment initialization error:",
+          error.response?.data || error.message
+        );
+        res.status(500).json({
+          status: "error",
+          message: error.message,
+        });
+      }
+    });
+
+    // Success handler for adoption payment
+    app.post("/adopt-payment/success", async (req, res) => {
+      try {
+        const tran_id = req.body.tran_id || req.query.tran_id;
+        console.log("Adoption payment success data received:", {
+          ...req.body,
+          tran_id,
+        });
+
+        if (!tran_id) {
+          console.error("No transaction ID found in success request");
+          return res.redirect("http://localhost:5173/payment/error");
+        }
+
+        // Update payment status to completed
+        const result = await adoptPetPaymentCollection.updateOne(
+          { tran_id },
+          {
+            $set: {
+              status: "completed",
+              paymentCompletedAt: new Date(),
+              paymentDetails: req.body,
+            },
+            $push: {
+              statusHistory: {
+                status: "completed",
+                timestamp: new Date(),
+                details: "Adoption payment completed successfully",
+                paymentData: req.body,
+              },
+            },
+          }
+        );
+
+        // Get payment details to update pet
+        const payment = await adoptPetPaymentCollection.findOne({ tran_id });
+
+        // Update pet status to adopted
+        const petResult = await petCollection.updateOne(
+          { _id: new ObjectId(payment.petId) },
+          {
+            $set: {
+              status: "adopted",
+              adopted: true,
+              adoptedBy: payment.cus_email,
+              adoptedAt: new Date(),
+              adoptionDetails: {
+                customerName: payment.cus_name,
+                customerEmail: payment.cus_email,
+                transactionId: tran_id,
+                adoptionDate: new Date(),
+              },
+            },
+          }
+        );
+
+        console.log("Adoption payment completed and pet status updated:", {
+          tran_id,
+          paymentUpdated: result.modifiedCount > 0,
+          petUpdated: petResult.modifiedCount > 0,
+        });
+
+        if (result.modifiedCount === 0 || petResult.modifiedCount === 0) {
+          console.error("Failed to update payment or pet status:", {
+            payment: result.modifiedCount,
+            pet: petResult.modifiedCount,
+          });
+          return res.redirect("http://localhost:5173/payment/error");
+        }
+
+        res.redirect("http://localhost:5173/payment/success");
+      } catch (error) {
+        console.error("Adoption payment success handler error:", error);
+        res.redirect("http://localhost:5173/payment/error");
+      }
+    });
+
+    // Fail handler for adoption payment
+    app.post("/adopt-payment/fail", async (req, res) => {
+      try {
+        const tran_id = req.body.tran_id || req.query.tran_id;
+        console.log("Failed adoption payment data received:", {
+          body: req.body,
+          query: req.query,
+          tran_id,
+        });
+
+        if (!tran_id) {
+          console.error("No transaction ID found in fail request");
+          return res.redirect("http://localhost:5173/payment/error");
+        }
+
+        const result = await adoptPetPaymentCollection.updateOne(
+          { tran_id },
+          {
+            $set: {
+              status: "failed",
+              paymentFailedAt: new Date(),
+              failureDetails: req.body,
+            },
+            $push: {
+              statusHistory: {
+                status: "failed",
+                timestamp: new Date(),
+                details: "Adoption payment failed",
+                failureData: req.body,
+              },
+            },
+          }
+        );
+
+        console.log("Adoption payment marked as failed:", tran_id);
+
+        if (result.modifiedCount === 0) {
+          console.error("No payment found to update:", tran_id);
+          return res.redirect("http://localhost:5173/payment/error");
+        }
+
+        res.redirect("http://localhost:5173/payment/fail");
+      } catch (error) {
+        console.error("Adoption payment fail handler error:", error);
+        res.redirect("http://localhost:5173/payment/error");
+      }
+    });
+
+    // Cancel handler for adoption payment
+    app.post("/adopt-payment/cancel", async (req, res) => {
+      try {
+        const tran_id = req.body.tran_id || req.query.tran_id;
+        console.log("Cancelled adoption payment data received:", {
+          body: req.body,
+          query: req.query,
+          tran_id,
+        });
+
+        if (!tran_id) {
+          console.error("No transaction ID found in cancel request");
+          return res.redirect("http://localhost:5173/payment/error");
+        }
+
+        const result = await adoptPetPaymentCollection.updateOne(
+          { tran_id },
+          {
+            $set: {
+              status: "cancelled",
+              paymentCancelledAt: new Date(),
+              cancellationDetails: req.body,
+            },
+            $push: {
+              statusHistory: {
+                status: "cancelled",
+                timestamp: new Date(),
+                details: "Adoption payment cancelled by user",
+                cancellationData: req.body,
+              },
+            },
+          }
+        );
+
+        console.log("Adoption payment marked as cancelled:", tran_id);
+
+        if (result.modifiedCount === 0) {
+          console.error("No payment found to update:", tran_id);
+          return res.redirect("http://localhost:5173/payment/error");
+        }
+
+        res.redirect("http://localhost:5173/payment/cancel");
+      } catch (error) {
+        console.error("Adoption payment cancel handler error:", error);
+        res.redirect("http://localhost:5173/payment/error");
+      }
+    });
+
+    // get all adoption payments
+    app.get("/adopt-pet-payments", async (req, res) => {
+      const adoptionPayments = await adoptPetPaymentCollection.find().toArray();
+      res.json(adoptionPayments);
     });
 
     // Send a ping to confirm a successful connection

@@ -10,8 +10,6 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const [userRole, setUserRole] = useState(null);
 
-  console.log(user);
-
   // Fetch user role from database
   const { data: userData } = useQuery({
     queryKey: ["user", user?.email],
@@ -46,17 +44,17 @@ const Dashboard = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center mb-4"
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center mb-4 shadow-lg"
           >
-            <span className="text-2xl font-bold">FT</span>
+            <span className="text-2xl font-bold">PH</span>
           </motion.div>
           <motion.h2
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl font-bold text-center"
+            className="text-2xl font-bold text-center bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent"
           >
-            Dashboard
+            Pawfect Haven
           </motion.h2>
         </div>
         <motion.ul
@@ -172,6 +170,23 @@ const Dashboard = () => {
                   Add New Forum
                 </NavLink>
               </motion.li>
+              {/* pet sales report */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/pet-sales-report"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-chart-line"></i>
+                  Pet Sales Report
+                </NavLink>
+              </motion.li>
+
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/sales-report"
@@ -237,6 +252,38 @@ const Dashboard = () => {
                 >
                   <i className="fas fa-plus-circle"></i>
                   Add New Product
+                </NavLink>
+              </motion.li>
+              {/* all pets */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/all-pets"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-paw"></i>
+                  All Pets
+                </NavLink>
+              </motion.li>
+              {/* add pet */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/add-pet"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-paw"></i>
+                  Add New Pet
                 </NavLink>
               </motion.li>
               <motion.li whileHover={{ scale: 1.02 }}>
@@ -346,7 +393,7 @@ const Dashboard = () => {
                   }
                 >
                   <i className="fas fa-bookmark"></i>
-                  Booked Trainers
+                  Booked Volunteers
                 </NavLink>
               </motion.li>
               <motion.li whileHover={{ scale: 1.02 }}>
@@ -373,10 +420,10 @@ const Dashboard = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleLogout}
-              className="zen-dots tracking-[0.1rem] w-full flex items-center gap-3 p-3 rounded-xl text-3xl text-red-400 hover:bg-red-500/10 transition-all duration-300"
+              className="w-full flex items-center gap-3 p-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all duration-300"
             >
               <i className="fas fa-sign-out-alt"></i>
-              Logout
+              <span className="text-lg font-semibold">Logout</span>
             </motion.button>
           </div>
         </motion.ul>
@@ -387,7 +434,7 @@ const Dashboard = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="flex-1 p-8 relative"
+        className="flex-1 p-8 relative bg-white/50 backdrop-blur-sm"
       >
         <Outlet />
       </motion.div>
