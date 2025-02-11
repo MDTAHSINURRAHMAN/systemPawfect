@@ -1,27 +1,51 @@
 const express = require("express");
 const cors = require("cors");
+const socket = require("socket.io");
+const http = require("http");
 const axios = require("axios");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY || "");
 const app = express();
+const server = http.createServer(app);
+const io = socket(server, {
+  cors: {
+    origin: "http://localhost:5173", // React app URL
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
+// Socket.io connection handling
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log("User joined room:", room);
+  });
+
+  socket.on("send_message", (data) => {
+    console.log("Message received:", data);
+    // Broadcast to both room combinations
+    const [user1, user2] = data.room.split("-");
+    const room1 = `${user1}-${user2}`;
+    const room2 = `${user2}-${user1}`;
+
+    io.to(room1).to(room2).emit("receive_message", data.message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.bpnbz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
-// Store ID: pawfe679fae25324c8
-// Store Password (API/Secret Key): pawfe679fae25324c8@ssl
-
-// Merchant Panel URL: https://sandbox.sslcommerz.com/manage/ (Credential as you inputted in the time of registration)
-
-// Store name: testpawfetb8g
-// Registered URL: www.pawfect.com
-// Session API to generate transaction: https://sandbox.sslcommerz.com/gwprocess/v3/api.php
-// Validation API: https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?wsdl
-// Validation API (Web Service) name: https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -34,10 +58,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server
-    // await client.connect();
-    // console.log("Connected to MongoDB");
-
     const db = client.db("pawfect");
     const userCollection = db.collection("users");
     const volunteerCollection = db.collection("volunteers");
@@ -50,6 +70,7 @@ async function run() {
     const productPaymentCollection = db.collection("productPayments");
     const adoptPetPaymentCollection = db.collection("adoptPetPayments");
     const petCollection = db.collection("pets");
+    const messageCollection = db.collection("messages");
 
     // Create user API endpoint
     app.post("/users", async (req, res) => {
@@ -151,6 +172,13 @@ async function run() {
           error: error.message,
         });
       }
+    });
+
+    // get volunteer by email
+    app.get("/volunteer-by-email/:email", async (req, res) => {
+      const email = req.params.email;
+      const volunteer = await volunteerCollection.findOne({ email });
+      res.json(volunteer);
     });
 
     // Create volunteer API endpoint
@@ -531,6 +559,15 @@ async function run() {
     // get booked volunteers
     app.get("/booked-volunteers", async (req, res) => {
       const bookedvolunteers = await paymentCollection.find().toArray();
+      res.json(bookedvolunteers);
+    });
+
+    // chat with volunteers by id
+    app.get("/chat-with-volunteer/:id", async (req, res) => {
+      const id = req.params.id;
+      const bookedvolunteers = await volunteerCollection
+        .find({ _id: new ObjectId(id) })
+        .toArray();
       res.json(bookedvolunteers);
     });
 
@@ -1303,6 +1340,50 @@ async function run() {
       res.json(adoptionPayments);
     });
 
+    // get all messages
+    app.get("/messages", async (req, res) => {
+      const messages = await messageCollection.find().toArray();
+      res.json(messages);
+    });
+
+    // get messages by email
+    app.get("/messages/:email", async (req, res) => {
+      const email = req.params.email;
+      const messages = await messageCollection.find({ email }).toArray();
+      res.json(messages);
+    });
+
+    // get messages between two users
+    app.get("/messages/:userId/:volunteerId", async (req, res) => {
+      try {
+        const { userId, volunteerId } = req.params;
+        console.log("Fetching messages between:", userId, volunteerId);
+
+        const messages = await messageCollection
+          .find({
+            $or: [
+              { sender: userId, receiver: volunteerId },
+              { sender: volunteerId, receiver: userId },
+            ],
+          })
+          .sort({ timestamp: 1 })
+          .toArray();
+
+        console.log("Found messages:", messages.length);
+        res.json(messages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ error: "Failed to fetch messages" });
+      }
+    });
+
+    // send message
+    app.post("/messages", async (req, res) => {
+      const message = req.body;
+      const result = await messageCollection.insertOne(message);
+      res.json(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log(
@@ -1326,6 +1407,6 @@ app.get("/", (req, res) => {
   res.send("Pawfect Server");
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

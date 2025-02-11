@@ -25,7 +25,7 @@ const About = () => {
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             >
               <svg 
-                className="w-8 h-8 sm:w-12 sm:h-12 text-black" 
+                className="w-8 h-8 sm:w-12 sm:h-12 text-[#FF640D]" 
                 viewBox="0 0 24 24"
               >
                 <path 
@@ -36,8 +36,8 @@ const About = () => {
             </motion.div>
             
             <motion.img
-              src="https://images.unsplash.com/photo-1649789261044-0c6a9fb528ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Fitness Professional"
+              src="https://images.pexels.com/photos/1904105/pexels-photo-1904105.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt="Pet Care Professional"
               className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover hover:scale-105 transition-transform duration-700"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.5 }}
@@ -53,7 +53,7 @@ const About = () => {
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         >
           <motion.h1 
-            className="zen-dots text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider"
+            className="zen-dots text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider text-[#0F1413]"
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -68,18 +68,17 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <p className="text-base sm:text-lg leading-relaxed">
-              FitTrack started as a small fitness tracking solution in 2023, 
-              aiming to help fitness enthusiasts track and improve their workout 
-              journey. It soon became obvious that we needed to expand our 
-              services beyond just basic tracking.
+              Pawfect started as a small animal welfare initiative in 2025, 
+              dedicated to helping stray and abandoned animals find loving homes. 
+              Our mission quickly expanded as we recognized the need for a more 
+              comprehensive approach to animal welfare.
             </p>
             
             <p className="text-base sm:text-lg leading-relaxed">
-              Currently, we offer comprehensive fitness tracking, personalized 
-              workout plans, and nutrition guidance to help our users achieve 
-              their fitness goals seamlessly and effectively. We value our users 
-              above everything else, ensuring that we provide the best possible 
-              fitness experience.
+              Today, we offer a complete platform for pet adoption, volunteer 
+              coordination, and community engagement. We connect animals in need 
+              with caring families, support animal welfare through our volunteer 
+              network, and provide essential pet care products and services.
             </p>
           </motion.div>
 

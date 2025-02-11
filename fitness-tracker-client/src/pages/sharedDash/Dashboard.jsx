@@ -222,6 +222,21 @@ const Dashboard = () => {
 
           {userRole === "volunteer" && (
             <>
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to={`/dashboard/trainer-chat/${user?.email}`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-comment-medical"></i>
+                  Trainer Chat
+                </NavLink>
+              </motion.li>
               {/* all products */}
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
@@ -351,6 +366,21 @@ const Dashboard = () => {
 
           {userRole === "member" && (
             <>
+            {/* <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/member"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-comment-medical"></i>
+                  User Chat
+                </NavLink>
+              </motion.li> */}
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/activity-logs"

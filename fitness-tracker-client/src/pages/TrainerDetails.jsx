@@ -303,56 +303,111 @@ const TrainerDetails = () => {
             </div>
           </motion.div>
 
-          {/* Right Side - Available Slots */}
-          <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 border border-orange-100"
-          >
-            <motion.h3 className="text-2xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-[#FF640D] to-orange-600 bg-clip-text text-transparent flex items-center gap-2">
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              Available Slots
-            </motion.h3>
-            <div className="grid grid-cols-1 gap-4">
-              {volunteer.availableDays?.map((slot, index) => (
-                <motion.button
-                  key={index}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleSlotSelect(slot.slotId)}
-                  disabled={slot.isBooked}
-                  className={`group flex justify-between items-center w-full p-5 ${
-                    slot.isBooked
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-gradient-to-r from-[#FF640D] to-[#FF8B3D] hover:shadow-xl"
-                  } text-white rounded-xl shadow-lg transition-all duration-300`}
+          {/* Right Side - Available Slots & Chat */}
+          <div className="flex flex-col gap-6">
+            <motion.div
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 border border-orange-100"
+            >
+              <motion.h3 className="text-2xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-[#FF640D] to-orange-600 bg-clip-text text-transparent flex items-center gap-2">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <span className="font-semibold text-lg">{slot.day}</span>
-                  <div className="flex flex-col items-end">
-                    <span className="bg-white text-[#FF640D] px-4 py-2 rounded-full text-sm font-medium group-hover:bg-orange-100 transition-colors duration-300">
-                      {volunteer.availableTime}
-                    </span>
-                    {slot.isBooked && (
-                      <span className="text-xs mt-1 text-gray-600">Booked</span>
-                    )}
-                  </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Available Slots
+              </motion.h3>
+              <div className="grid grid-cols-1 gap-4">
+                {volunteer.availableDays?.map((slot, index) => (
+                  <motion.button
+                    key={index}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleSlotSelect(slot.slotId)}
+                    disabled={slot.isBooked}
+                    className={`group flex justify-between items-center w-full p-5 ${
+                      slot.isBooked
+                        ? "bg-gray-300 cursor-not-allowed"
+                        : "bg-gradient-to-r from-[#FF640D] to-[#FF8B3D] hover:shadow-xl"
+                    } text-white rounded-xl shadow-lg transition-all duration-300`}
+                  >
+                    <span className="font-semibold text-lg">{slot.day}</span>
+                    <div className="flex flex-col items-end">
+                      <span className="bg-white text-[#FF640D] px-4 py-2 rounded-full text-sm font-medium group-hover:bg-orange-100 transition-colors duration-300">
+                        {volunteer.availableTime}
+                      </span>
+                      {slot.isBooked && (
+                        <span className="text-xs mt-1 text-gray-600">Booked</span>
+                      )}
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Chat Section */}
+            <motion.div
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 border border-orange-100"
+            >
+              <motion.h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#FF640D] to-orange-600 bg-clip-text text-transparent flex items-center gap-2">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                Chat with Volunteer
+              </motion.h3>
+              <Link
+                to={`/user-chat/${id}`}
+                className="block w-full"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-to-r from-[#FF640D] to-[#FF8B3D] text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <span>Start Chat</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
                 </motion.button>
-              ))}
-            </div>
-          </motion.div>
+              </Link>
+              <p className="mt-4 text-gray-600 text-sm text-center">
+                Have questions about pet rescue? Chat with our volunteer directly!
+              </p>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </>
