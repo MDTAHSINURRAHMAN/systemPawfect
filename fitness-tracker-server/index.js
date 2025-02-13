@@ -18,8 +18,10 @@ const io = socket(server, {
 
 const port = process.env.PORT || 5000;
 
+// Middleware configurations
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Socket.io connection handling
 io.on("connection", (socket) => {
@@ -72,6 +74,7 @@ async function run() {
     const petCollection = db.collection("pets");
     const messageCollection = db.collection("messages");
     const locationCollection = db.collection("locations");
+    const lostPetsCollection = db.collection("lostPets");
 
     // Create user API endpoint
     app.post("/users", async (req, res) => {
@@ -1414,6 +1417,154 @@ async function run() {
         res.status(500).json({ error: error.message });
       }
     });
+
+    // Post lost pet report
+    app.post("/lost-pets", async (req, res) => {
+      try {
+        const report = req.body;
+        console.log("Server received report data:", report);
+
+        // Validate required fields
+        if (!report.lat || !report.lng) {
+          console.error("Missing coordinates");
+          return res.status(400).json({
+            message: "Latitude and longitude are required",
+          });
+        }
+
+        // Ensure coordinates are numbers
+        const lat = Number(report.lat);
+        const lng = Number(report.lng);
+
+        if (isNaN(lat) || isNaN(lng)) {
+          console.error("Invalid coordinates:", { lat, lng });
+          return res.status(400).json({
+            message: "Invalid coordinates",
+          });
+        }
+
+        // Create GeoJSON point
+        const geoLocation = {
+          type: "Point",
+          coordinates: [lng, lat], // MongoDB expects [longitude, latitude]
+        };
+
+        // Prepare the document with required fields
+        const lostPetDocument = {
+          petName: report.petName,
+          petType: report.petType,
+          breed: report.breed || "",
+          color: report.color,
+          lastSeenDate: new Date(report.lastSeenDate),
+          description: report.description,
+          contactNumber: report.contactNumber,
+          reward: report.reward || "",
+          petImage: report.petImage || "",
+          ownerEmail: report.ownerEmail,
+          ownerName: report.ownerName,
+          status: "lost",
+          approved: false,
+          reportDate: new Date(),
+          location: geoLocation,
+          lat: lat,
+          lng: lng,
+        };
+
+        console.log("Attempting to save document:", lostPetDocument);
+
+        // Ensure index exists
+        await lostPetsCollection.createIndex({ location: "2dsphere" });
+
+        // Insert document
+        const result = await lostPetsCollection.insertOne(lostPetDocument);
+        console.log("Document inserted successfully:", result);
+
+        res.status(201).json({
+          success: true,
+          message: "Lost pet report created successfully",
+          data: result,
+        });
+      } catch (error) {
+        console.error("Server error details:", {
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+        });
+        res.status(500).json({
+          message: "Failed to save lost pet report",
+          error: error.message,
+          details: error.stack,
+        });
+      }
+    });
+
+    // Get all lost pet reports
+    app.get("/lost-pets", async (req, res) => {
+      try {
+        const reports = await lostPetsCollection
+          .find({ approved: true, status: "lost" })
+          .sort({ reportDate: -1 })
+          .toArray();
+        res.json(reports);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // get all lost pets for admin
+    app.get("/lost-pets/admin", async (req, res) => {
+      const reports = await lostPetsCollection.find().toArray();
+      res.json(reports);
+    });
+
+
+    // Update lost pet report status
+    app.patch("/lost-pets/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { approved } = req.body;
+        const result = await lostPetsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { approved } }
+        );
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // Update lost pet report status
+    app.patch("/lost-pets/status/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { status } = req.body;
+        const result = await lostPetsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { status } }
+        );
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+    
+    
+    // Delete lost pet report
+    app.delete("/lost-pets/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const result = await lostPetsCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+    
+
+
+
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });

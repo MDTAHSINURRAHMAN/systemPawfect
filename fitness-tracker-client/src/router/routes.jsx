@@ -52,7 +52,9 @@ import MemberChatBox from "../pages/Member/MemberChatBox";
 import TrainerChat from "../pages/trainer/TrainerChat";
 import ChatWithMember from "../pages/trainer/ChatWithMember";
 import PetDiseaseDetection from "../pages/Member/PetDiseaseDetection";
-
+import ReportLostPet from "../pages/Member/ReportLostPet";
+import LostPets from "../pages/LostPets";
+import LostPet from "../pages/admin/LostPet";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -198,6 +200,18 @@ export const router = createBrowserRouter([
         path: "/pet-disease-detection",
         element: <PetDiseaseDetection />,
       },
+      {
+        path: "/lost-pets",
+        element: <LostPets />,
+      },
+      {
+        path: "/report-lost-pet",
+        element: (
+          <PrivateRoute>
+            <ReportLostPet />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
@@ -255,6 +269,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/add-product",
         element: <AddClass />,
+      },
+      {
+        path: "/dashboard/lost-pet",
+        element: <LostPet />,
       },
       {
         path: "/dashboard/all-pets",

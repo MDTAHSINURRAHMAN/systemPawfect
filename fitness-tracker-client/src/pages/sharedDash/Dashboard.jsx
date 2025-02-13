@@ -80,6 +80,26 @@ const Dashboard = () => {
                   All Newsletter Subscribers
                 </NavLink>
               </motion.li>
+
+              {/* lost pet */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/lost-pet"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-paw"></i>
+                  Lost Pet
+                </NavLink>
+              </motion.li>
+              
+
+
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/all-trainers"
