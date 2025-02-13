@@ -71,6 +71,7 @@ async function run() {
     const adoptPetPaymentCollection = db.collection("adoptPetPayments");
     const petCollection = db.collection("pets");
     const messageCollection = db.collection("messages");
+    const locationCollection = db.collection("locations");
 
     // Create user API endpoint
     app.post("/users", async (req, res) => {
@@ -1382,6 +1383,36 @@ async function run() {
       const message = req.body;
       const result = await messageCollection.insertOne(message);
       res.json(result);
+    });
+
+    // Save location
+    app.post("/locations", async (req, res) => {
+      try {
+        const locationData = req.body;
+        const result = await locationCollection.insertOne(locationData);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    // Get locations for a specific chat
+    app.get("/locations/:senderId/:receiverId", async (req, res) => {
+      try {
+        const { senderId, receiverId } = req.params;
+        const locations = await locationCollection
+          .find({
+            $or: [
+              { senderId, receiverId },
+              { senderId: receiverId, receiverId: senderId },
+            ],
+          })
+          .sort({ timestamp: -1 })
+          .toArray();
+        res.json(locations);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
     });
 
     // Send a ping to confirm a successful connection

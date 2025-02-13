@@ -166,20 +166,6 @@ const Navbar = () => {
         </NavLink>
       </li> */}
       {/* Rescue a pet */}
-      <li>
-        <NavLink
-          to="/rescue-pet"
-          className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
-              isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
-            }`
-          }
-        >
-          Rescue a Pet
-        </NavLink>
-      </li>
     </>
   );
 

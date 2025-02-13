@@ -48,10 +48,11 @@ import AdoptPet from "../pages/AdoptPet";
 import AdoptPetDetails from "../pages/AdoptPetDetails";
 import AdoptPetPayment from "../payment/AdoptPetPayment";
 import PetSalesReport from "../pages/admin/PetSalesReport";
-import RescueAPet from "../pages/RescueAPet";
 import MemberChatBox from "../pages/Member/MemberChatBox";
 import TrainerChat from "../pages/trainer/TrainerChat";
 import ChatWithMember from "../pages/trainer/ChatWithMember";
+import PetDiseaseDetection from "../pages/Member/PetDiseaseDetection";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -108,10 +109,6 @@ export const router = createBrowserRouter([
       {
         path: "/product-payment/:id",
         element: <ProductPayment />,
-      },
-      {
-        path: "/rescue-pet",
-        element: <RescueAPet />,
       },
       {
         path: "/book-trainer/:id",
@@ -196,6 +193,10 @@ export const router = createBrowserRouter([
       {
         path: "/user-chat/:id",
         element: <MemberChatBox />,
+      },
+      {
+        path: "/pet-disease-detection",
+        element: <PetDiseaseDetection />,
       },
     ],
   },

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
+import { FaLocationArrow } from "react-icons/fa";
 
 // Configure socket with path option
 const socket = io("http://localhost:5000", {
@@ -60,6 +61,18 @@ const ChatWithMember = () => {
     },
   });
 
+  // Get shared locations
+  const { data: sharedLocations = [] } = useQuery({
+    queryKey: ["locations", id, volunteer._id],
+    enabled: !!volunteer._id && !!id,
+    queryFn: async () => {
+      const res = await axios.get(
+        `http://localhost:5000/locations/${id}/${volunteer._id}`
+      );
+      return res.data;
+    }
+  });
+
   useEffect(() => {
     if (volunteer._id && id) {
       // Join both possible room combinations
@@ -67,7 +80,7 @@ const ChatWithMember = () => {
       const room2 = `${id}-${volunteer._id}`;
       socket.emit("join_room", room1);
       socket.emit("join_room", room2);
-      
+
       // Initial fetch of messages
       refetchMessages();
     }
@@ -143,6 +156,25 @@ const ChatWithMember = () => {
                 </h3>
                 <p className="text-gray-600 mt-1">{member?.email}</p>
               </div>
+
+              {/* Show last shared location */}
+              {sharedLocations[0] && (
+                <div className="p-4 border border-gray-200 rounded-xl">
+                  <h4 className="font-semibold mb-2">Last Shared Location</h4>
+                  <a
+                    href={`https://www.google.com/maps?q=${sharedLocations[0].latitude},${sharedLocations[0].longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-orange-500 hover:text-orange-600"
+                  >
+                    <FaLocationArrow />
+                    <span className="underline">View on Map</span>
+                  </a>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {new Date(sharedLocations[0].timestamp).toLocaleString()}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -151,8 +183,10 @@ const ChatWithMember = () => {
             {/* Chat Header */}
             <div className="p-4 border-b bg-white shadow-sm">
               <div className="flex items-center gap-3">
-                <img 
-                  src={member?.photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg"}
+                <img
+                  src={
+                    member?.photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg"
+                  }
                   alt="Member"
                   className="w-10 h-10 rounded-full"
                 />
@@ -175,7 +209,11 @@ const ChatWithMember = () => {
                   }`}
                 >
                   <img
-                    src={msg.sender === volunteer._id ? msg.senderImage : msg.receiverImage}
+                    src={
+                      msg.sender === volunteer._id
+                        ? msg.senderImage
+                        : msg.receiverImage
+                    }
                     alt="Profile"
                     className="w-8 h-8 rounded-full"
                   />
@@ -186,9 +224,32 @@ const ChatWithMember = () => {
                         : "bg-white shadow-md rounded-tl-none"
                     }`}
                   >
-                    <p className="text-sm">{msg.content}</p>
-                    <p className={`text-xs mt-1 ${msg.sender === volunteer._id ? "text-orange-100" : "text-gray-500"}`}>
-                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {msg.isLocation ? (
+                      <a
+                        href={msg.content.split(": ")[1]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        <FaLocationArrow />
+                        <span className="underline">
+                          View Member's Location
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-sm">{msg.content}</p>
+                    )}
+                    <p
+                      className={`text-xs mt-1 ${
+                        msg.sender === volunteer._id
+                          ? "text-orange-100"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                   </div>
                 </motion.div>
@@ -197,7 +258,10 @@ const ChatWithMember = () => {
 
             {/* Message Input */}
             <div className="p-4 bg-white border-t">
-              <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
+              <form
+                onSubmit={handleSendMessage}
+                className="flex gap-2 items-center"
+              >
                 <input
                   type="text"
                   value={message}
@@ -209,8 +273,19 @@ const ChatWithMember = () => {
                   type="submit"
                   className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
                   </svg>
                 </button>
               </form>

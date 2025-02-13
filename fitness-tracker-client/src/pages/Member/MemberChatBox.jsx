@@ -6,6 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
+import { FaLocationArrow } from "react-icons/fa";
+
+// Google Maps API Key
+const GOOGLE_MAPS_API_KEY = "AIzaSyC5s89_KsT2NG6DawsfH_Ju__2Yp4oKh8I";
 
 // Configure socket with path option
 const socket = io("http://localhost:5000", {
@@ -111,6 +115,57 @@ const MemberChatBox = () => {
     }
   };
 
+  const handleShareLocation = async () => {
+    if ("geolocation" in navigator) {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        const { latitude, longitude } = position.coords;
+
+        // Save location to MongoDB
+        const locationData = {
+          senderId: userData?._id,
+          senderEmail: user?.email,
+          senderName: userData?.name,
+          receiverId: id,
+          latitude,
+          longitude,
+          timestamp: new Date(),
+        };
+
+        await axios.post("http://localhost:5000/locations", locationData);
+
+        // Send location as a message in chat
+        const messageData = {
+          sender: user?.email,
+          senderId: userData?._id,
+          senderName: userData?.name,
+          senderImage: userData?.photoURL,
+          receiver: id,
+          receiverName: volunteer?.fullName,
+          receiverImage: volunteer?.profileImage,
+          content: `📍 Shared Location: https://www.google.com/maps?q=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`,
+          isLocation: true,
+          latitude,
+          longitude,
+          timestamp: new Date(),
+        };
+
+        const room = `${user.email}-${id}`;
+        socket.emit("send_message", { message: messageData, room });
+
+        await axios.post("http://localhost:5000/messages", messageData);
+        refetchMessages();
+      } catch (error) {
+        console.error("Error getting location:", error);
+      }
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
   useEffect(() => {
     const chatBox = document.getElementById("chatBox");
     if (chatBox) {
@@ -165,8 +220,11 @@ const MemberChatBox = () => {
             <div className="p-6 border-b bg-white rounded-tr-2xl">
               <h2 className="text-2xl font-bold text-gray-800">Messages</h2>
             </div>
-            
-            <div id="chatBox" className="flex-1 p-6 overflow-y-auto w-full max-h-[calc(80vh-160px)]">
+
+            <div
+              id="chatBox"
+              className="flex-1 p-6 overflow-y-auto w-full max-h-[calc(80vh-160px)]"
+            >
               {chatMessages.map((msg, idx) => (
                 <motion.div
                   key={idx}
@@ -178,7 +236,9 @@ const MemberChatBox = () => {
                 >
                   <div
                     className={`flex items-start gap-3 max-w-[70%] ${
-                      msg.sender === user?.email ? "flex-row-reverse" : "flex-row"
+                      msg.sender === user?.email
+                        ? "flex-row-reverse"
+                        : "flex-row"
                     }`}
                   >
                     <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-orange-100">
@@ -197,16 +257,22 @@ const MemberChatBox = () => {
                         msg.sender === user?.email
                           ? "bg-orange-500 text-white rounded-l-2xl rounded-br-2xl"
                           : "bg-white rounded-r-2xl rounded-bl-2xl shadow-md"
-                      } px-2 py-1`}
+                      } px-4 py-2`}
                     >
-                      {/* <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium">
-                          {msg.sender === user?.email
-                            ? msg.senderName
-                            : msg.receiverName}
-                        </span>
-                      </div> */}
-                      <p className="text-sm">{msg.content}</p>
+                      <p className="text-sm">
+                        {msg.isLocation ? (
+                          <a
+                            href={msg.content.split(": ")[1]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                          >
+                            📍 View Shared Location
+                          </a>
+                        ) : (
+                          msg.content
+                        )}
+                      </p>
                       <p
                         className={`text-xs mt-1 ${
                           msg.sender === user?.email
@@ -214,7 +280,10 @@ const MemberChatBox = () => {
                             : "text-gray-500"
                         }`}
                       >
-                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(msg.timestamp).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                     </div>
                   </div>
@@ -226,7 +295,16 @@ const MemberChatBox = () => {
               onSubmit={handleSendMessage}
               className="p-6 bg-white rounded-br-2xl"
             >
-              <div className="flex gap-4">
+              <div className="flex gap-4 items-center">
+                <button
+                  type="button"
+                  onClick={handleShareLocation}
+                  className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
+                  title="Share Location"
+                >
+                  <FaLocationArrow className="h-5 w-5" />
+                </button>
+
                 <input
                   type="text"
                   value={message}
@@ -234,12 +312,24 @@ const MemberChatBox = () => {
                   placeholder="Type your message..."
                   className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500"
                 />
+
                 <button
                   type="submit"
                   className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
                   </svg>
                 </button>
               </div>
