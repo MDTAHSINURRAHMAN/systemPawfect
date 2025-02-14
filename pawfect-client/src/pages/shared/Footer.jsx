@@ -8,7 +8,7 @@ const Footer = () => {
       <motion.h1 
         className="edu-font text-center text-[#FF640D] text-4xl md:text-6xl lg:text-8xl font-bold px-4 leading-[4rem] relative"
       >
-        {Array.from("Stronger EveryDay").map((letter, index) => (
+        {Array.from("Pawfect Pet Rescue and Adoption").map((letter, index) => (
           <motion.span
             key={index}
             initial={{ opacity: 0, y: -50 }}
@@ -46,9 +46,9 @@ const Footer = () => {
             transition={{ duration: 0.5 }}
             className="text-center md:text-left hover:translate-y-[-5px] transition-all duration-300"
           >
-            <h6 className="zen-dots text-white text-2xl md:text-3xl tracking-[0.1rem] mb-3 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-[2px] after:bg-[#FF640D]">Call us</h6>
-            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">+1 345 678 9900</motion.p>
-            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">+1 345 678 9900</motion.p>
+            <h6 className="zen-dots text-white text-2xl md:text-3xl tracking-[0.1rem] mb-3 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-[2px] after:bg-[#FF640D]">Contact Us</h6>
+            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">+1 (555) 123-4567</motion.p>
+            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">support@pawfect.com</motion.p>
           </motion.nav>
 
           <motion.nav 
@@ -57,9 +57,9 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-center md:text-left hover:translate-y-[-5px] transition-all duration-300"
           >
-            <h6 className="zen-dots text-white text-2xl md:text-3xl tracking-[0.1rem] mb-3 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-[2px] after:bg-[#FF640D]">we are open</h6>
-            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">Mon - Fri: 05:00 AM - 10:00 PM</motion.p>
-            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">Sat - Sun: 05:00 AM - 01:00 PM</motion.p>
+            <h6 className="zen-dots text-white text-2xl md:text-3xl tracking-[0.1rem] mb-3 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-[2px] after:bg-[#FF640D]">Training Hours</h6>
+            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">Mon - Fri: 8:00 AM - 6:00 PM</motion.p>
+            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">Sat - Sun: 9:00 AM - 4:00 PM</motion.p>
           </motion.nav>
 
           <motion.nav 
@@ -68,9 +68,9 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-center md:text-left hover:translate-y-[-5px] transition-all duration-300"
           >
-            <h6 className="zen-dots text-white text-2xl md:text-3xl tracking-[0.1rem] mb-3 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-[2px] after:bg-[#FF640D]">we are here</h6>
-            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">27 West 24th St New Your,</motion.p>
-            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">NY 10010</motion.p>
+            <h6 className="zen-dots text-white text-2xl md:text-3xl tracking-[0.1rem] mb-3 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-[2px] after:bg-[#FF640D]">Location</h6>
+            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">123 Pet Paradise Lane</motion.p>
+            <motion.p whileHover={{ x: 5 }} className="link link-hover text-gray-400 text-sm md:text-base tracking-[0.1rem] hover:text-[#FF640D] transition-colors">San Francisco, CA 94105</motion.p>
           </motion.nav>
         </div>
       </motion.div>

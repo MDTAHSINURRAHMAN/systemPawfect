@@ -18,7 +18,7 @@ const TrainerBookingPage = () => {
   } = useQuery({
     queryKey: ["trainer", id],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/trainers/${id}`);
+      const response = await axios.get(`http://localhost:5000/volunteers/${id}`);
       return response.data.data;
     },
   });
@@ -27,44 +27,44 @@ const TrainerBookingPage = () => {
     trainer?.availableDays?.find((day) => day.slotId === slotId)?.day ||
     "Not specified";
 
-  const packages = [
-    {
-      name: "Silver Package",
-      price: 29,
-      duration: "1 Month",
-      features: [
-        "2 sessions per week",
-        "Basic fitness assessment",
-        "Nutrition guidelines",
-        "Access to gym facilities",
-      ],
-    },
-    {
-      name: "Gold Package",
-      price: 49,
-      duration: "3 Months",
-      features: [
-        "3 sessions per week",
-        "Advanced fitness assessment",
-        "Customized meal plans",
-        "Access to all gym facilities",
-        "Monthly progress tracking",
-      ],
-    },
-    {
-      name: "Platinum Package",
-      price: 99,
-      duration: "6 Months",
-      features: [
-        "Unlimited sessions",
-        "Complete health screening",
-        "Personalized workout plans",
-        "Premium gym access",
-        "24/7 trainer support",
-        "Quarterly body composition analysis",
-      ],
-    },
-  ];
+    const packages = [
+      {
+        name: "Rescue Package",
+        price: 19,
+        duration: "1 Month",
+        features: [
+          "Pet rescue and transport",
+          "Temporary foster care",
+          "Initial health checkup",
+          "Basic vaccinations",
+        ],
+      },
+      {
+        name: "Daily Care Package", 
+        price: 39,
+        duration: "1 Month",
+        features: [
+          "Daily feeding and care",
+          "Regular health monitoring",
+          "Grooming services",
+          "Deworming and flea treatment",
+          "Routine vet check-ups",
+        ],
+      },
+      {
+        name: "Training & Socialization Package",
+        price: 59, 
+        duration: "3 Months",
+        features: [
+          "Basic obedience training",
+          "Advanced behavior correction",
+          "Socialization with other pets",
+          "Pet enrichment activities",
+          "24/7 trainer support",
+        ],
+      },
+    ];
+    
 
   const handleJoinNow = async () => {
     if (!selectedPackage) {
@@ -84,7 +84,6 @@ const TrainerBookingPage = () => {
 
       console.log(paymentData);
 
-      // Navigate to payment page with payment data
       navigate("/payment", { state: paymentData });
     } catch (error) {
       toast.error("Failed to proceed to payment. Please try again.");
@@ -111,7 +110,7 @@ const TrainerBookingPage = () => {
   return (
     <>
       <Helmet>
-        <title>Fitverse | Trainer Booking</title>
+        <title>Pawfect | Trainer Booking</title>
       </Helmet>
       <motion.div
         initial={{ opacity: 0 }}
@@ -145,13 +144,13 @@ const TrainerBookingPage = () => {
             <div className="flex flex-col sm:flex-row items-start gap-6">
               <div className="w-full sm:w-2/3">
                 <h3 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 border-b border-orange-200 pb-2">
-                  Trainer Information
+                  Volunteer Information
                 </h3>
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-gray-700 min-w-[120px]">
-                      Trainer:
+                      Volunteer:
                     </span>
                     <span className="text-[#FF640D] font-semibold">
                       {trainer?.fullName}
@@ -180,10 +179,10 @@ const TrainerBookingPage = () => {
 
               <div className="w-full sm:w-1/3 bg-gradient-to-br from-white to-orange-50 rounded-xl p-6 shadow-lg border border-orange-100">
                 <h4 className="font-bold text-xl text-gray-800 mb-4 pb-2 border-b border-orange-200">
-                  Specialized Classes
+                  Volunteer Specialties
                 </h4>
                 <div className="flex flex-wrap gap-3">
-                  {trainer?.classes?.map((className, index) => (
+                  {trainer?.skills?.map((skill, index) => (
                     <motion.span
                       key={index}
                       whileHover={{
@@ -192,7 +191,7 @@ const TrainerBookingPage = () => {
                       }}
                       className="bg-gradient-to-r from-orange-500 to-[#FF640D] text-white px-5 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 backdrop-blur-sm"
                     >
-                      {className}
+                      {skill}
                     </motion.span>
                   ))}
                 </div>

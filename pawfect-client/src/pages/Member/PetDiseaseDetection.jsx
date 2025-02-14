@@ -23,34 +23,32 @@ const PetDiseaseDetection = () => {
 
   const handleSubmit = async () => {
     if (!selectedImage) return;
-
+  
     setIsLoading(true);
     try {
-      const reader = new FileReader();
-      reader.readAsDataURL(selectedImage);
-      reader.onloadend = async () => {
-        const base64Image = reader.result.split(',')[1];
-
-        const response = await axios({
-          method: "POST",
-          url: "https://detect.roboflow.com/petwell-dog-nyoba/3",
-          params: {
-            api_key: "pEJmKJyfxn7HmfJIuWMn"
-          },
-          data: base64Image,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        });
-
-        setResult(response.data);
-        setIsLoading(false);
-      };
+      const formData = new FormData();
+      formData.append("image", selectedImage);
+  
+      const response = await axios({
+        method: "POST",
+        url: "https://detect.roboflow.com/dog_skin_disease_detection/1",
+        params: {
+          api_key: "pEJmKJyfxn7HmfJIuWMn"
+        },
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+  
+      setResult(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error detecting disease:', error);
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="max-w-4xl mx-auto p-6">

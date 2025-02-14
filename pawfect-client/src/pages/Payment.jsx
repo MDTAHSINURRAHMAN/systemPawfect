@@ -11,7 +11,7 @@ const Payment = () => {
     const { user } = useContext(AuthContext);
     const paymentData = location.state;
 
-    // console.log(paymentData);
+    console.log(paymentData);
     
 
     return (
@@ -60,7 +60,7 @@ const Payment = () => {
                             >
                                 <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-800">Package Details</h3>
                                 <p className="text-gray-700"><span className="font-medium">Package:</span> {paymentData?.packageName}</p>
-                                <p className="text-gray-700 mt-2"><span className="font-medium">Price:</span> ${paymentData?.packagePrice}</p>
+                                <p className="text-gray-700 mt-2"><span className="font-medium">Price:</span> ${paymentData?.amount}</p>
                             </motion.div>
 
                             <motion.div 

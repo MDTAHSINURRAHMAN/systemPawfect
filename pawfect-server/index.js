@@ -589,11 +589,11 @@ async function run() {
     app.post("/payments", async (req, res) => {
       try {
         const payment = req.body;
-        const { price, volunteerId, slotId } = req.body;
+        const { amount, trainerId, slotId } = req.body;
 
         // Update volunteer's availableDays with booking info
         await volunteerCollection.updateOne(
-          { _id: new ObjectId(volunteerId), "availableDays.slotId": slotId },
+          { _id: new ObjectId(trainerId), "availableDays.slotId": slotId },
           {
             $set: {
               "availableDays.$.isBooked": true,
