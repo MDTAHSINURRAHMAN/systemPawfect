@@ -25,6 +25,7 @@ const AddForum = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["forums"]);
       toast.success("Forum created successfully!");
+      navigate("/forums");
     },
     onError: (error) => {
       toast.error("Failed to create forum. Please try again.");
@@ -42,7 +43,7 @@ const AddForum = () => {
       authorName: user?.name,
       authorEmail: user?.email,
       createdAt: new Date(),
-      likes: 0,
+      votes: [],
       comments: [],
     });
   };
@@ -93,10 +94,13 @@ const AddForum = () => {
             className="w-full px-4 py-2 border border-orange-200 rounded-lg focus:ring-2 focus:ring-[#FF640D] focus:border-transparent transition-all duration-300"
           >
             <option value="general">General Discussion</option>
-            <option value="nutrition">Nutrition</option>
-            <option value="workout">Workout</option>
-            <option value="motivation">Motivation</option>
-            <option value="tips">Tips & Tricks</option>
+            <option value="pet-care">Pet Care</option>
+            <option value="training">Training</option>
+            <option value="health">Pet Health</option>
+            <option value="adoption">Adoption</option>
+            <option value="behavior">Pet Behavior</option>
+            <option value="nutrition">Pet Nutrition</option>
+            <option value="grooming">Grooming</option>
           </select>
         </motion.div>
 

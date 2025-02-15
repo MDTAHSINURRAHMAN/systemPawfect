@@ -3,9 +3,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaComments, FaShare } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+
 const ForumDetails = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
@@ -34,11 +36,11 @@ const ForumDetails = () => {
       );
       return response.data;
     },
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(["forum", id]);
-      toast.success("Vote successful!");
+      toast.success("Vote recorded successfully!");
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Failed to vote. Please try again.");
     },
   });
@@ -52,130 +54,160 @@ const ForumDetails = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="text-center py-10 text-red-500">
-        Error loading forum details
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500 text-lg font-medium">
+          Error loading forum details. Please try again later.
+        </div>
       </div>
     );
   }
 
   const upvotes = forum.votes?.filter((v) => v.type === "upvote").length || 0;
-  const downvotes =
-    forum.votes?.filter((v) => v.type === "downvote").length || 0;
+  const downvotes = forum.votes?.filter((v) => v.type === "downvote").length || 0;
   const totalVotes = upvotes - downvotes;
 
   return (
     <>
       <Helmet>
-        <title>Fitverse | Forum Details</title>
+        <title>Pawfect | {forum.title}</title>
       </Helmet>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="p-4 sm:p-6 lg:p-8"
+        className="container mx-auto px-4 py-28 md:py-12 lg:py-16 max-w-6xl"
       >
-        <motion.div
+        <motion.article
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-white to-orange-50 rounded-2xl shadow-xl p-6 sm:p-8 lg:p-10 hover:shadow-2xl transition-all duration-300 border border-orange-100"
+          className="bg-white rounded-2xl shadow-xl p-6 md:p-8 hover:shadow-2xl transition-all duration-300"
         >
-          <div className="flex flex-col sm:flex-row items-start gap-6">
+          <header className="flex flex-col md:flex-row gap-6 mb-8">
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="flex sm:flex-col items-center gap-3 sm:gap-4"
+              className="flex md:flex-col items-center gap-4"
             >
               <motion.button
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleVote("upvote")}
-                className={`p-3 rounded-full transition-colors duration-300 ${
+                className={`p-3 rounded-full transition-colors ${
                   forum.votes?.find(
                     (v) => v.userId === user?._id && v.type === "upvote"
                   )
-                    ? "bg-orange-100 text-[#FF640D]"
-                    : "text-gray-400 hover:bg-orange-50 hover:text-[#FF640D]"
+                    ? "bg-orange-100 text-orange-500"
+                    : "text-gray-400 hover:bg-orange-50 hover:text-orange-500"
                 }`}
                 disabled={voteMutation.isLoading}
               >
-                <FaArrowUp size={28} />
+                <FaArrowUp className="text-2xl" />
               </motion.button>
+
               <motion.span
                 whileHover={{ scale: 1.1 }}
                 className="text-xl font-bold text-gray-700"
               >
                 {totalVotes}
               </motion.span>
+
               <motion.button
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleVote("downvote")}
-                className={`p-3 rounded-full transition-colors duration-300 ${
+                className={`p-3 rounded-full transition-colors ${
                   forum.votes?.find(
                     (v) => v.userId === user?._id && v.type === "downvote"
                   )
-                    ? "bg-orange-100 text-[#FF640D]"
-                    : "text-gray-400 hover:bg-orange-50 hover:text-[#FF640D]"
+                    ? "bg-orange-100 text-orange-500"
+                    : "text-gray-400 hover:bg-orange-50 hover:text-orange-500"
                 }`}
                 disabled={voteMutation.isLoading}
               >
-                <FaArrowDown size={28} />
+                <FaArrowDown className="text-2xl" />
               </motion.button>
             </motion.div>
 
-            <motion.div
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex-1 space-y-6"
-            >
+            <div className="flex-1 space-y-4">
               <motion.h1
-                whileHover={{ scale: 1.02 }}
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#FF640D] to-orange-600 bg-clip-text text-transparent"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent"
               >
                 {forum.title}
               </motion.h1>
-              <motion.p
+
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-gray-600 text-sm sm:text-base lg:text-lg whitespace-pre-wrap"
+                className="flex flex-wrap gap-4 text-sm text-gray-600"
               >
-                {forum.content}
-              </motion.p>
-
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm text-gray-500 border-t border-orange-100 pt-4"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center gap-2 bg-orange-50 px-4 py-2 rounded-full"
-                >
-                  <span className="font-semibold text-[#FF640D]">
-                    Posted by:
+                <div className="flex items-center gap-2">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${forum.authorName}&background=random`}
+                    alt={forum.authorName}
+                    className="w-6 h-6 rounded-full"
+                  />
+                  <span>{forum.authorName}</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span>
+                    {new Date(forum.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </span>
-                  <span className="text-gray-700">{forum.authorName}</span>
-                </motion.div>
-                <motion.span
-                  whileHover={{ scale: 1.05 }}
-                  className="text-gray-500 bg-orange-50 px-4 py-2 rounded-full"
-                >
-                  {new Date(forum.createdAt).toLocaleString()}
-                </motion.span>
+                  <span className="flex items-center gap-1">
+                    <FaComments className="text-orange-500" />
+                    {forum.comments?.length || 0} comments
+                  </span>
+                </div>
               </motion.div>
-            </motion.div>
-          </div>
-        </motion.div>
+            </div>
+          </header>
+
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="prose prose-lg max-w-none"
+          >
+            <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              {forum.content}
+            </div>
+          </motion.div>
+
+          <motion.footer
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center"
+          >
+            <div className="flex gap-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-2 text-gray-500 hover:text-orange-500"
+              >
+                <FaShare />
+                Share
+              </motion.button>
+            </div>
+          </motion.footer>
+        </motion.article>
       </motion.div>
     </>
   );

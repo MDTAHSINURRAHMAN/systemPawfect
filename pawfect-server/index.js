@@ -75,6 +75,9 @@ async function run() {
     const messageCollection = db.collection("messages");
     const locationCollection = db.collection("locations");
     const lostPetsCollection = db.collection("lostPets");
+    const vetCollection = db.collection("vets");
+    const appointmentCollection = db.collection("appointments");
+    const faqCollection = db.collection("faqs");
 
     // Create user API endpoint
     app.post("/users", async (req, res) => {
@@ -1561,8 +1564,83 @@ async function run() {
         res.status(500).json({ message: error.message });
       }
     });
-    
 
+    // get all vets
+    app.get("/vets", async (req, res) => {
+      const vets = await vetCollection.find().toArray();
+      res.json(vets);
+    });
+
+    // add vet
+    app.post("/vets", async (req, res) => {
+      const vet = req.body;
+      const result = await vetCollection.insertOne(vet);
+      res.json(result);
+    });
+
+    // delete vet
+    app.delete("/vets/:id", async (req, res) => {
+      const { id } = req.params;
+      const result = await vetCollection.deleteOne({ _id: new ObjectId(id) });
+      res.json(result);
+    });
+
+    // get vet by id
+    app.get("/vets/:id", async (req, res) => {
+      const { id } = req.params;
+      const vet = await vetCollection.findOne({ _id: new ObjectId(id) });
+      res.json(vet);
+    });
+    
+    // add appointment
+    app.post("/appointments", async (req, res) => {
+      const appointment = req.body;
+      const result = await appointmentCollection.insertOne(appointment);
+      res.json(result);
+    });
+    
+    // get all appointments
+    app.get("/appointments", async (req, res) => {
+      const appointments = await appointmentCollection.find().toArray();
+      res.json(appointments);
+    });
+    
+    // get all faqs
+    app.get("/faqs", async (req, res) => {
+      const faqs = await faqCollection.find().toArray();
+      res.json(faqs);
+    });
+
+    // add faq
+    app.post("/faqs", async (req, res) => {
+      const faq = req.body;
+      const result = await faqCollection.insertOne(faq);
+      res.json(result);
+    });
+
+    // update faq
+    app.patch("/faqs/:id", async (req, res) => {
+      const { id } = req.params;
+      const { question, answer } = req.body;
+      const result = await faqCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { question, answer } }
+      );
+      res.json(result);
+    });
+
+    // delete faq
+    app.delete("/faqs/:id", async (req, res) => { 
+      const { id } = req.params;
+      const result = await faqCollection.deleteOne({ _id: new ObjectId(id) });
+      res.json(result);
+    });
+    
+    
+    
+    
+    
+    
 
 
 

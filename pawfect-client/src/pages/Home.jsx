@@ -9,7 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaExclamationTriangle, FaMapMarkerAlt, FaPhone, FaCalendarAlt, FaPaw, FaPalette, FaGift, FaUserAlt, FaClock, FaHeart, FaPrint, FaShare } from "react-icons/fa";
-
+import FAQuestions from "./FAQuestions";
+import Forum from "./Forum";
 const Home = () => {
   const [showModal, setShowModal] = useState(true);
   const [currentPetIndex, setCurrentPetIndex] = useState(0);
@@ -223,6 +224,8 @@ const Home = () => {
       <About />
       <WhatWeOffer />
       <TrainingPrograms />
+      <Forum />
+      <FAQuestions />
       <Newsletter />
     </div>
   );

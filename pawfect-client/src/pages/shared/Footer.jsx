@@ -1,5 +1,5 @@
 import React from "react";
-import logo from '../../assets/Logo/logo.png'
+import logo from '../../assets/Logo/bg_nai_1.png'
 import { motion } from "framer-motion";
 
 const Footer = () => {
@@ -37,7 +37,7 @@ const Footer = () => {
             whileHover={{ scale: 1.05 }}
             className="flex justify-center md:justify-start"
           >
-            <img className="w-[150px] md:w-[200px] bg-white/90 rounded-full hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300" src={logo} alt="logo" />
+            <img className="py-2 px-2 bg-white/90 rounded-full hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300" src={logo} alt="logo" />
           </motion.div>
 
           <motion.nav 

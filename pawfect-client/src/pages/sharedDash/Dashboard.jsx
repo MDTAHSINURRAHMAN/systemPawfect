@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { AuthContext } from "../../context/AuthContext";
 import { useAuth } from "../../context/AuthContext";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useContext(AuthContext);
   const [userRole, setUserRole] = useState(null);
 
   // Fetch user role from database
@@ -31,7 +32,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="satoshi flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Sidebar Navigation */}
       <motion.div
         initial={{ x: -100, opacity: 0 }}
@@ -54,7 +55,7 @@ const Dashboard = () => {
             transition={{ delay: 0.2 }}
             className="text-2xl font-bold text-center bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent"
           >
-            Pawfect Haven
+            Welcome 
           </motion.h2>
         </div>
         <motion.ul
@@ -98,7 +99,22 @@ const Dashboard = () => {
                 </NavLink>
               </motion.li>
               
-
+              {/* vets */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/vets"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-user-md"></i>
+                  All Vets
+                </NavLink>
+              </motion.li>
 
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
@@ -221,6 +237,23 @@ const Dashboard = () => {
                   <i className="fas fa-chart-line"></i>
                   Sales Report
                 </NavLink>
+
+              {/* faq */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/faq"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-question-circle"></i>
+                  FAQ
+                </NavLink>
+              </motion.li>
               </motion.li>
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink

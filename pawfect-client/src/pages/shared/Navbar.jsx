@@ -126,6 +126,22 @@ const Navbar = () => {
           Lost Pets
         </NavLink>
       </li>
+
+      <li>
+        <NavLink
+          to="/all-vets"
+          className={({ isActive }) =>
+            `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
+              isActive
+                ? "text-gray-300 font-bold border-gray-300"
+                : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
+            }`
+          }
+        >
+          Vets
+        </NavLink>
+      </li>
+
       <li>
         <NavLink
           to="/all-products"

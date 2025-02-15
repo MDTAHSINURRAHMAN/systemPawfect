@@ -55,6 +55,10 @@ import PetDiseaseDetection from "../pages/Member/PetDiseaseDetection";
 import ReportLostPet from "../pages/Member/ReportLostPet";
 import LostPets from "../pages/LostPets";
 import LostPet from "../pages/admin/LostPet";
+import Vet from "../pages/admin/Vet";
+import VetDetails from "../pages/VetDetails";
+import AllVets from "../pages/AllVets";
+import FAQ from "../pages/admin/FAQ";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -103,6 +107,14 @@ export const router = createBrowserRouter([
       {
         path: "/adopt-pet/:id",
         element: <AdoptPetDetails />,
+      },
+      {
+        path: "/vets/:id",
+        element: <VetDetails />,
+      },
+      {
+        path: "/all-vets",
+        element: <AllVets />,
       },
       {
         path: "/adopt-pet-payment/:id",
@@ -313,6 +325,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/chat-with-member/:id",
         element: <ChatWithMember />,
+      },
+      {
+        path: "/dashboard/vets",
+        element: <Vet />,
+      },
+      {
+        path: "/dashboard/faq",
+        element: <FAQ />,
       },
     ],
   },

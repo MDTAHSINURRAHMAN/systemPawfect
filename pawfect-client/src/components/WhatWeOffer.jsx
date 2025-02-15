@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaDumbbell, FaShower } from 'react-icons/fa';
-import { GiGymBag } from 'react-icons/gi';
-import { IoFastFood } from 'react-icons/io5';  // Changed this import
+import { FaDog, FaHeart, FaHome, FaUserMd } from 'react-icons/fa';
 
 const WhatWeOffer = () => {
     const [ref, inView] = useInView({
@@ -12,24 +10,24 @@ const WhatWeOffer = () => {
 
     const features = [
         {
-            icon: <GiGymBag className="w-16 h-16" />,
-            title: "Expert Trainers",
-            description: "Our certified trainers bring years of experience and personalized attention to help you achieve your fitness goals safely and effectively."
+            icon: <FaUserMd className="w-16 h-16" />,
+            title: "Expert Veterinarians",
+            description: "Our certified veterinarians provide comprehensive care with years of experience in treating all kinds of pets with love and expertise."
         },
         {
-            icon: <FaDumbbell className="w-16 h-16" />,
-            title: "Modern Equipment",
-            description: "Access state-of-the-art fitness equipment and machines, regularly maintained to ensure your workout experience is both safe and effective."
+            icon: <FaHeart className="w-16 h-16" />,
+            title: "Loving Care",
+            description: "We treat every pet like family, providing personalized attention and ensuring they feel comfortable and safe throughout their stay."
         },
         {
-            icon: <FaShower className="w-16 h-16" />,
-            title: "Premium Facilities",
-            description: "Enjoy clean, modern shower facilities and changing rooms equipped with lockers, making it convenient to fit workouts into your busy schedule."
+            icon: <FaHome className="w-16 h-16" />,
+            title: "Modern Facilities",
+            description: "State-of-the-art pet care facilities with spacious areas, climate control, and the latest medical equipment for optimal care."
         },
         {
-            icon: <IoFastFood className="w-16 h-16" />,
-            title: "Nutrition Guidance",
-            description: "Receive expert nutrition advice and personalized meal plans to complement your fitness routine and maximize your results."
+            icon: <FaDog className="w-16 h-16" />,
+            title: "Pet Training",
+            description: "Professional training programs to help your pets develop good behavior and social skills in a positive learning environment."
         }
     ];
 
@@ -55,40 +53,40 @@ const WhatWeOffer = () => {
             y: 0,
             scale: 1,
             transition: {
-                duration: 0.6,
+                duration: 0.8,
                 ease: "easeOut"
             }
         }
     };
 
     return (
-        <div className="bg-white py-12 sm:py-16 md:py-20 w-11/12 mx-auto">
-            <div className="container mx-auto px-4 sm:px-6">
+        <div className="bg-gradient-to-b from-white to-orange-50 py-16 sm:py-20 md:py-24">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-12 sm:mb-16"
+                    transition={{ duration: 0.8 }}
+                    className="text-center mb-16 sm:mb-20"
                 >
                     <motion.h3 
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.2, duration: 0.6 }}
-                        className="text-[#FF640D] text-base sm:text-lg font-semibold mb-3 sm:mb-4"
+                        transition={{ delay: 0.2, duration: 0.8 }}
+                        className="text-orange-600 text-lg sm:text-xl font-semibold mb-4"
                     >
-                        What We Offer
+                        Our Services
                     </motion.h3>
                     <motion.h2 
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.4, duration: 0.6 }}
-                        className="zen-dots text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight"
+                        transition={{ delay: 0.4, duration: 0.8 }}
+                        className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-900"
                     >
-                        THE BEST STANDARDS ANYWHERE
+                        Exceptional Pet Care Services
                     </motion.h2>
                 </motion.div>
 
@@ -98,28 +96,28 @@ const WhatWeOffer = () => {
                     variants={containerVariants}
                     initial="hidden"
                     animate={inView ? "visible" : "hidden"}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10"
                 >
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
                             variants={itemVariants}
-                            className="text-center p-4 sm:p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 hover:shadow-lg"
+                            className="bg-white rounded-2xl p-6 sm:p-8 text-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-xl border border-orange-100"
                         >
                             <motion.div
                                 whileHover={{ scale: 1.1, rotate: 5 }}
                                 transition={{ type: "spring", stiffness: 300 }}
-                                className="inline-block text-[#FF640D] mb-4 sm:mb-6"
+                                className="inline-block text-orange-500 mb-6"
                             >
                                 {feature.icon}
                             </motion.div>
                             <motion.h3 
-                                className="text-lg sm:text-xl font-bold mb-3 sm:mb-4"
+                                className="text-xl sm:text-2xl font-bold mb-4 text-gray-900"
                             >
                                 {feature.title}
                             </motion.h3>
                             <motion.p 
-                                className="text-gray-600 leading-relaxed text-sm sm:text-base"
+                                className="text-gray-600 leading-relaxed"
                             >
                                 {feature.description}
                             </motion.p>
