@@ -6,12 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
-import { FaLocationArrow } from "react-icons/fa";
+import { FaLocationArrow, FaPaperPlane, FaSmile, FaImage } from "react-icons/fa";
 
-// Google Maps API Key
 const GOOGLE_MAPS_API_KEY = "AIzaSyC5s89_KsT2NG6DawsfH_Ju__2Yp4oKh8I";
 
-// Configure socket with path option
 const socket = io("http://localhost:5000", {
   path: "/socket.io/",
   transports: ["websocket", "polling"],
@@ -21,9 +19,9 @@ const MemberChatBox = () => {
   const { user } = useContext(AuthContext);
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(true);
   const { id } = useParams();
 
-  // Get user data
   const { data: userData = {} } = useQuery({
     queryKey: ["user", user?.email],
     enabled: !!user?.email,
@@ -33,25 +31,19 @@ const MemberChatBox = () => {
     },
   });
 
-  // Get volunteer data
   const { data: volunteer = [] } = useQuery({
     queryKey: ["volunteer", id],
     queryFn: async () => {
-      const res = await axios.get(
-        `http://localhost:5000/chat-with-volunteer/${id}`
-      );
+      const res = await axios.get(`http://localhost:5000/chat-with-volunteer/${id}`);
       return res.data[0];
     },
   });
 
-  // Get chat messages with refetch
   const { data: initialMessages = [], refetch: refetchMessages } = useQuery({
     queryKey: ["messages", user?.email, id],
     enabled: !!user?.email && !!id,
     queryFn: async () => {
-      const res = await axios.get(
-        `http://localhost:5000/messages/${user?.email}/${id}`
-      );
+      const res = await axios.get(`http://localhost:5000/messages/${user?.email}/${id}`);
       return res.data;
     },
     staleTime: 0,
@@ -65,19 +57,15 @@ const MemberChatBox = () => {
 
   useEffect(() => {
     if (user?.email && id) {
-      // Join both possible room combinations
       const room1 = `${user.email}-${id}`;
       const room2 = `${id}-${user.email}`;
       socket.emit("join_room", room1);
       socket.emit("join_room", room2);
-
-      // Initial fetch of messages
       refetchMessages();
     }
 
     socket.on("receive_message", (message) => {
       setChatMessages((prev) => [...prev, message]);
-      // Refetch messages when new message received
       refetchMessages();
     });
 
@@ -108,7 +96,6 @@ const MemberChatBox = () => {
     try {
       await axios.post("http://localhost:5000/messages", messageData);
       setMessage("");
-      // Refetch messages after sending
       refetchMessages();
     } catch (error) {
       console.error("Error sending message:", error);
@@ -123,8 +110,6 @@ const MemberChatBox = () => {
         });
 
         const { latitude, longitude } = position.coords;
-
-        // Save location to MongoDB
         const locationData = {
           senderId: userData?._id,
           senderEmail: user?.email,
@@ -137,7 +122,6 @@ const MemberChatBox = () => {
 
         await axios.post("http://localhost:5000/locations", locationData);
 
-        // Send location as a message in chat
         const messageData = {
           sender: user?.email,
           senderId: userData?._id,
@@ -155,14 +139,11 @@ const MemberChatBox = () => {
 
         const room = `${user.email}-${id}`;
         socket.emit("send_message", { message: messageData, room });
-
         await axios.post("http://localhost:5000/messages", messageData);
         refetchMessages();
       } catch (error) {
         console.error("Error getting location:", error);
       }
-    } else {
-      console.error("Geolocation is not supported by this browser.");
     }
   };
 
@@ -171,118 +152,114 @@ const MemberChatBox = () => {
     if (chatBox) {
       chatBox.scrollTop = chatBox.scrollHeight;
     }
+
+    // Handle responsive sidebar
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth >= 768);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [chatMessages]);
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl">
-        <div className="grid md:grid-cols-3 h-[80vh]">
-          {/* Volunteer Details */}
-          <div className="bg-gray-50 p-6 rounded-l-2xl">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">
-              Volunteer Profile
-            </h2>
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="flex flex-col items-center">
-                <div className="w-32 h-32 rounded-full overflow-hidden mb-4 ring-4 ring-orange-100">
-                  <img
-                    src={
-                      volunteer?.profileImage ||
-                      "https://i.ibb.co/MgsTCcv/avater.jpg"
-                    }
-                    alt="Volunteer"
-                    className="w-full h-full object-cover"
-                  />
+    <div className="py-24 bg-gradient-to-br from-orange-50 via-white to-orange-50/30 min-h-screen">
+      <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-orange-100 h-[calc(100vh-4rem)]">
+        <div className="grid md:grid-cols-3 h-full">
+          {/* Volunteer Profile Sidebar - Hidden on mobile by default */}
+          {showSidebar && (
+            <div className="bg-gradient-to-b from-orange-50 to-white p-4 md:p-8 border-r border-orange-100 overflow-y-auto">
+              <div className="space-y-6 md:space-y-8">
+                <div className="text-center">
+                  <div className="relative w-24 h-24 md:w-40 md:h-40 mx-auto mb-4 md:mb-6">
+                    <img
+                      src={volunteer?.profileImage || "https://i.ibb.co/MgsTCcv/avater.jpg"}
+                      alt="Volunteer"
+                      className="w-full h-full object-cover rounded-2xl shadow-lg ring-4 ring-white"
+                    />
+                    <div className="absolute bottom-4 right-4 w-4 h-4 bg-green-500 rounded-full ring-2 ring-white"></div>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-800">{volunteer?.fullName}</h3>
+                  <p className="text-sm md:text-base text-gray-600 mt-2">{volunteer?.email}</p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                  {volunteer?.fullName}
-                </h3>
-                <p className="text-gray-600 mb-4">{volunteer?.email}</p>
-                <div className="w-full space-y-3">
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <span className="font-medium">Age:</span>
-                    <span>{volunteer?.age} years</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <span className="font-medium">Experience:</span>
-                    <span>{volunteer?.experience || "N/A"}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <span className="font-medium">Location:</span>
-                    <span>{volunteer?.location || "N/A"}</span>
+
+                <div className="space-y-4 md:space-y-6">
+                  <div className="bg-white p-4 md:p-6 rounded-2xl shadow-md">
+                    <h4 className="font-semibold text-gray-700 mb-4">Profile Info</h4>
+                    <div className="space-y-3 md:space-y-4">
+                      <div className="flex justify-between items-center text-sm md:text-base">
+                        <span className="text-gray-600">Age</span>
+                        <span className="font-medium">{volunteer?.age} years</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm md:text-base">
+                        <span className="text-gray-600">Experience</span>
+                        <span className="font-medium">{volunteer?.experience || "N/A"}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm md:text-base">
+                        <span className="text-gray-600">Location</span>
+                        <span className="font-medium">{volunteer?.location || "N/A"}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
-          <div className="col-span-2 flex flex-col bg-gray-50 rounded-r-2xl">
-            <div className="p-6 border-b bg-white rounded-tr-2xl">
-              <h2 className="text-2xl font-bold text-gray-800">Messages</h2>
+          {/* Chat Section */}
+          <div className={`${showSidebar ? 'col-span-2' : 'col-span-3'} flex flex-col h-full`}>
+            {/* Chat Header */}
+            <div className="p-4 md:p-6 border-b bg-white shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {/* Toggle Sidebar Button on Mobile */}
+                <button 
+                  className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+                  onClick={() => setShowSidebar(!showSidebar)}
+                >
+                  ☰
+                </button>
+                <h2 className="text-lg md:text-2xl font-bold text-gray-800">Chat with {volunteer?.fullName}</h2>
+              </div>
+              <div className="flex gap-2 md:gap-4">
+                <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                  <FaImage className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
+                </button>
+                <button 
+                  onClick={handleShareLocation}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <FaLocationArrow className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
+                </button>
+              </div>
             </div>
 
-            <div
-              id="chatBox"
-              className="flex-1 p-6 overflow-y-auto w-full max-h-[calc(80vh-160px)]"
-            >
+            {/* Messages Area */}
+            <div id="chatBox" className="flex-1 p-4 md:p-6 overflow-y-auto space-y-4 md:space-y-6">
               {chatMessages.map((msg, idx) => (
                 <motion.div
                   key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${
-                    msg.sender === user?.email ? "justify-end" : "justify-start"
-                  } mb-4`}
+                  className={`flex ${msg.sender === user?.email ? "justify-end" : "justify-start"}`}
                 >
-                  <div
-                    className={`flex items-start gap-3 max-w-[70%] ${
-                      msg.sender === user?.email
-                        ? "flex-row-reverse"
-                        : "flex-row"
-                    }`}
-                  >
-                    <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-orange-100">
-                      <img
-                        src={
-                          msg.sender === user?.email
-                            ? msg.senderImage
-                            : msg.receiverImage
-                        }
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div
-                      className={`${
-                        msg.sender === user?.email
-                          ? "bg-orange-500 text-white rounded-l-2xl rounded-br-2xl"
-                          : "bg-white rounded-r-2xl rounded-bl-2xl shadow-md"
-                      } px-4 py-2`}
-                    >
-                      <p className="text-sm">
-                        {msg.isLocation ? (
-                          <a
-                            href={msg.content.split(": ")[1]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline"
-                          >
-                            📍 View Shared Location
-                          </a>
-                        ) : (
-                          msg.content
-                        )}
-                      </p>
-                      <p
-                        className={`text-xs mt-1 ${
-                          msg.sender === user?.email
-                            ? "text-orange-100"
-                            : "text-gray-500"
-                        }`}
-                      >
+                  <div className={`flex items-end gap-2 md:gap-4 max-w-[85%] md:max-w-[80%] ${msg.sender === user?.email ? "flex-row-reverse" : "flex-row"}`}>
+                    <img
+                      src={msg.sender === user?.email ? msg.senderImage : msg.receiverImage}
+                      alt="Profile"
+                      className="w-6 h-6 md:w-8 md:h-8 rounded-full ring-2 ring-white"
+                    />
+                    <div className={`
+                      ${msg.sender === user?.email 
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-2xl rounded-bl-2xl" 
+                        : "bg-gray-100 rounded-t-2xl rounded-br-2xl"}
+                      p-3 md:p-4 shadow-md
+                    `}>
+                      <p className="text-xs md:text-sm">{msg.content}</p>
+                      <p className={`text-[10px] md:text-xs mt-1 md:mt-2 ${msg.sender === user?.email ? "text-orange-100" : "text-gray-500"}`}>
                         {new Date(msg.timestamp).toLocaleTimeString([], {
                           hour: "2-digit",
-                          minute: "2-digit",
+                          minute: "2-digit"
                         })}
                       </p>
                     </div>
@@ -291,46 +268,33 @@ const MemberChatBox = () => {
               ))}
             </div>
 
-            <form
-              onSubmit={handleSendMessage}
-              className="p-6 bg-white rounded-br-2xl"
-            >
-              <div className="flex gap-4 items-center">
-                <button
+            {/* Message Input */}
+            <form onSubmit={handleSendMessage} className="p-4 md:p-6 bg-white border-t">
+              <div className="flex items-center gap-2 md:gap-4 bg-gray-50 rounded-2xl p-2">
+                <button type="button" className="p-1.5 md:p-2 hover:bg-gray-100 rounded-full transition-colors">
+                  <FaSmile className="w-5 h-5 md:w-6 md:h-6 text-gray-500" />
+                </button>
+                <button 
                   type="button"
                   onClick={handleShareLocation}
-                  className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
-                  title="Share Location"
+                  className="p-1.5 md:p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                  <FaLocationArrow className="h-5 w-5" />
+                  <FaLocationArrow className="w-5 h-5 md:w-6 md:h-6 text-gray-500" />
                 </button>
-
+                
                 <input
                   type="text"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type your message..."
-                  className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-orange-500"
+                  className="flex-1 bg-transparent px-3 md:px-4 py-2 text-sm md:text-base focus:outline-none"
                 />
 
                 <button
                   type="submit"
-                  className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
+                  className="p-2 md:p-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:shadow-lg transition-all duration-300"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                    />
-                  </svg>
+                  <FaPaperPlane className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
             </form>

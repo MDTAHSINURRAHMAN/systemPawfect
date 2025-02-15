@@ -1075,10 +1075,10 @@ async function run() {
           tran_id,
           status: "pending",
           createdAt: new Date(),
-          total_amount: payment.adoptionFee,
+          total_amount: payment.total_amount,
           currency: payment.currency || "BDT",
           petId: payment.petId,
-          petName: payment.petName,
+          petName: payment.product_name,
           ...payment,
           statusHistory: [
             {
@@ -1096,7 +1096,7 @@ async function run() {
         const sslData = {
           store_id: "pawfe679fae25324c8",
           store_passwd: "pawfe679fae25324c8@ssl",
-          total_amount: parseFloat(payment.adoptionFee), // Convert to number
+          total_amount: parseFloat(payment.total_amount), // Convert to number
           currency: "BDT",
           tran_id,
           success_url: `http://localhost:5000/adopt-payment/success?tran_id=${tran_id}`,
@@ -1104,7 +1104,7 @@ async function run() {
           cancel_url: `http://localhost:5000/adopt-payment/cancel?tran_id=${tran_id}`,
           ipn_url: `http://localhost:5000/adopt-payment/ipn?tran_id=${tran_id}`,
           shipping_method: "NO",
-          product_name: payment.petName || "Pet Adoption", // Ensure product name is not undefined
+          product_name: payment.product_name || "Pet Adoption", // Ensure product name is not undefined
           product_category: "Pet Adoption",
           product_profile: "non-physical-goods",
           cus_name: payment.cus_name,

@@ -21,46 +21,37 @@ const Navbar = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!user) return;
-
-      if (user?.email) {
-        try {
-          const response = await fetch(
-            `http://localhost:5000/users/${user.email}`
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setUserData({
-              ...data,
-              name: data.name || user.displayName,
-              photoURL: data.photoURL || user.photoURL,
-              email: data.email || user.email,
-            });
-          } else {
-            // Fallback to Firebase user data if server fetch fails
-            setUserData({
-              name: user.displayName || "",
-              photoURL: user.photoURL || "",
-              email: user.email || "",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          // Fallback to Firebase user data if fetch fails
+      if (!user?.email) return;
+      
+      try {
+        const response = await fetch(`http://localhost:5000/users/${user.email}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserData({
+            ...data,
+            name: data.name || user.displayName,
+            photoURL: data.photoURL || user.photoURL,
+            email: data.email || user.email,
+          });
+        } else {
           setUserData({
             name: user.displayName || "",
             photoURL: user.photoURL || "",
             email: user.email || "",
           });
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUserData({
+          name: user.displayName || "",
+          photoURL: user.photoURL || "",
+          email: user.email || "",
+        });
       }
     };
 
@@ -83,10 +74,10 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
+            `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+                ? "text-gray-300 font-bold border-gray-300"
+                : "text-gray- hover:text-[#FF640D] transition-all duration-300"
             }`
           }
         >
@@ -97,24 +88,24 @@ const Navbar = () => {
         <NavLink
           to="/all-volunteer"
           className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
+            `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+                ? "text-gray-300 font-bold border-gray-300"
+                : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
         >
-          All Volunteers
+          Volunteers
         </NavLink>
       </li>
       <li>
         <NavLink
           to="/adopt-pet"
           className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
+            `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+                ? "text-gray-300 font-bold border-gray-300"
+                : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
         >
@@ -125,10 +116,10 @@ const Navbar = () => {
         <NavLink
           to="/lost-pets"
           className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
+            `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+                ? "text-gray-300 font-bold border-gray-300"
+                : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
         >
@@ -139,14 +130,14 @@ const Navbar = () => {
         <NavLink
           to="/all-products"
           className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
+            `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+                ? "text-gray-300 font-bold border-gray-300"
+                : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
         >
-          All Products
+          Shop
         </NavLink>
       </li>
       {user && (
@@ -154,10 +145,10 @@ const Navbar = () => {
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
-              `text-sm tracking-[0.1rem] ${
+              `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
                 isActive
-                  ? "text-[#FF640D] font-bold"
-                  : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
+                  ? "text-gray-300 font-bold border-gray-300"
+                  : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
               }`
             }
           >
@@ -165,247 +156,90 @@ const Navbar = () => {
           </NavLink>
         </li>
       )}
-      {/* <li>
-        <NavLink
-          to="/forums"
-          className={({ isActive }) =>
-            `text-sm tracking-[0.1rem] ${
-              isActive
-                ? "text-[#FF640D] font-bold"
-                : "text-[#0F1413]font-medium hover:text-[#FF640D] transition-colors"
-            }`
-          }
-        >
-          Community
-        </NavLink>
-      </li> */}
-      {/* Rescue a pet */}
     </>
   );
 
   return (
     <nav
-      className={`w-full z-[1000] transition-all duration-500 ${
-        isScrolled ? "bg-white/90 backdrop-blur-md shadow-lg" : "bg-transparent"
+      className={`fixed w-full z-[1000] transition-all duration-500 ${
+        isScrolled 
+          ? "bg-white/95 backdrop-blur-md shadow-lg py-2" 
+          : "bg-transparent py-4"
       }`}
     >
-      <div className="navbar container mx-auto px-4 py-4">
-        <div className="navbar-start">
-          <div className="dropdown">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-8">
             <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Link to="/" className="flex-shrink-0">
+                <img
+                  src={logo}
+                  alt="Pawfect Logo"
+                  className="w-20 md:w-24 hover:brightness-110 transition-all duration-300"
+                />
+              </Link>
+            </motion.div>
+
+            <ul className="hidden lg:flex items-center gap-8">
+              {links}
+            </ul>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-6">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <img
+                  className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-200 ring-offset-2"
+                  src={userData?.photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg"}
+                  alt={userData?.name}
+                />
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleLogout}
+                  className="px-6 py-2.5 text-[#FF640D]/90 border-2 border-[#FF640D]/90 rounded-lg font-medium hover:bg-[#FF640D]/90 hover:text-white transition-all duration-300"
+                >
+                  Logout
+                </motion.button>
+              </div>
+            ) : (
+              <Link to="/login">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-6 py-2.5 bg-[#FF640D]/90 text-white rounded-lg font-medium hover:bg-[#ff5500]/90 transition-all duration-300"
+                >
+                  Sign In
+                </motion.button>
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Menu */}
+          <div className="lg:hidden">
+            <motion.button
               whileTap={{ scale: 0.95 }}
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost lg:hidden"
+              className="p-2 rounded-lg hover:bg-gray-100"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke={isScrolled ? "#1f2937" : "black"}
+                stroke="currentColor"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
                 />
               </svg>
-            </motion.div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1001] p-6 shadow-xl bg-white/90 backdrop-blur-md rounded-xl w-60 space-y-4 absolute left-0"
-            >
-              {links}
-              {user ? (
-                <>
-                  <div className="pt-4 border-t border-gray-100">
-                    <li className="px-4 py-2 text-sm font-medium text-gray-700">
-                      {userData?.name || "User"}
-                    </li>
-                    <li className="px-4 py-2 text-sm text-gray-500">
-                      {userData?.email || ""}
-                    </li>
-                    <motion.li whileTap={{ scale: 0.95 }}>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-all duration-300"
-                      >
-                        Logout
-                      </button>
-                    </motion.li>
-                  </div>
-                </>
-              ) : (
-                <div className="pt-4 border-t border-gray-100">
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/login"
-                      className="block px-4 py-2 text-sm hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Member Login
-                    </Link>
-                  </motion.li>
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/trainer-login"
-                      className="block px-4 py-2 text-sm hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Trainer Login
-                    </Link>
-                  </motion.li>
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/admin-login"
-                      className="block px-4 py-2 text-sm hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Admin Login
-                    </Link>
-                  </motion.li>
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/register"
-                      className="block px-4 py-2 text-sm hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Register
-                    </Link>
-                  </motion.li>
-                </div>
-              )}
-            </ul>
+            </motion.button>
           </div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Link to="/" className="flex-shrink-0">
-              <img
-                src={logo}
-                alt="FitVerse Logo"
-                className="w-20 md:w-24 hover:brightness-110 transition-all duration-300"
-              />
-            </Link>
-          </motion.div>
-        </div>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 space-x-8">{links}</ul>
-        </div>
-        <div className="navbar-end space-x-4 hidden lg:flex">
-          {user ? (
-            <div className="flex items-center gap-6">
-              <motion.div
-                className="dropdown dropdown-end tooltip tooltip-bottom"
-                data-tip={userData?.name || "User"}
-              >
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="btn btn-ghost btn-circle avatar ring-2 ring-orange-100 ring-offset-2"
-                >
-                  <div className="w-10 rounded-full">
-                    <img
-                      alt="User Profile"
-                      src={
-                        userData?.photoURL ||
-                        "https://i.ibb.co/MgsTCcv/avater.jpg"
-                      }
-                    />
-                  </div>
-                </div>
-                <ul
-                  tabIndex={0}
-                  className="mt-3 z-[1001] p-4 shadow-xl menu menu-sm dropdown-content bg-white/90 backdrop-blur-md rounded-xl w-60 absolute right-0"
-                >
-                  <li className="px-4 py-2 text-sm font-medium text-gray-700">
-                    {userData?.name || "User"}
-                  </li>
-                  <li className="px-4 py-2 text-sm text-gray-500">
-                    {userData?.email || ""}
-                  </li>
-                </ul>
-              </motion.div>
-              <motion.button
-                // whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleLogout}
-                className="satoshi bg-gradient-to-r from-[#FF640D] to-orange-600 text-white px-8 py-2.5 rounded-lg text-lg font-semibold tracking-wide hover:shadow-lg hover:shadow-orange-200 transition-all duration-300"
-              >
-                Logout
-              </motion.button>
-            </div>
-          ) : (
-            <>
-              <motion.div className="dropdown dropdown-end">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  tabIndex={0}
-                  className="satoshi bg-gradient-to-r from-[#FF640D] to-orange-600 text-white px-8 py-2.5 rounded-lg text-lg font-semibold tracking-wide hover:shadow-lg hover:shadow-orange-200 transition-all duration-300"
-                >
-                  Login
-                </motion.button>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content z-[1] menu p-4 shadow-xl bg-white/90 backdrop-blur-md rounded-xl w-60 mt-2 space-y-1"
-                >
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/login"
-                      className="block px-4 py-2 hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Member Login
-                    </Link>
-                  </motion.li>
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/trainer-login"
-                      className="block px-4 py-2 hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Trainer Login
-                    </Link>
-                  </motion.li>
-                  <motion.li
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/admin-login"
-                      className="block px-4 py-2 hover:bg-orange-50 rounded-lg transition-all duration-300"
-                    >
-                      Admin Login
-                    </Link>
-                  </motion.li>
-                </ul>
-              </motion.div>
-              <Link to="/register">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="satoshi bg-gradient-to-r from-gray-800 to-gray-900 text-white px-8 py-2.5 rounded-lg text-lg font-semibold tracking-wide hover:shadow-lg hover:shadow-gray-200 transition-all duration-300"
-                >
-                  Register
-                </motion.button>
-              </Link>
-            </>
-          )}
         </div>
       </div>
     </nav>

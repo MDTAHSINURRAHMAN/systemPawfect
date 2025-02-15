@@ -24,38 +24,41 @@ const Banner = () => {
       title: "FIND YOUR NEW BEST FRIEND",
       subtitle: "ADOPT A PET TODAY",
       image:
-        "https://images.pexels.com/photos/30642736/pexels-photo-30642736/free-photo-of-dog-and-cat-walking-outdoors-in-romania.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/16366944/pexels-photo-16366944/free-photo-of-puppy-in-cage.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       buttonText: "Adopt Now",
-      path: "/adopt-pet"
+      path: "/adopt-pet",
+      description: "Give a loving home to a pet in need. Start your journey today."
     },
     {
       title: "GIVE A SECOND CHANCE",
-      subtitle: "RESCUE A PET IN NEED",
+      subtitle: "RESCUE A PET IN NEED", 
       image:
-        "https://images.pexels.com/photos/20049568/pexels-photo-20049568/free-photo-of-a-cat-sitting-in-a-cage.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/20176157/pexels-photo-20176157/free-photo-of-two-puppies-are-looking-through-a-fence.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       buttonText: "Rescue a Pet",
-      path: "/all-volunteer"
+      path: "/all-volunteer",
+      description: "Every pet deserves a second chance at happiness. Be their hero."
     },
     {
-      title: "HELP US SAVE LIVES", 
+      title: "HELP US SAVE LIVES",
       subtitle: "SUPPORT ANIMAL RESCUES",
       image:
-        "https://images.pexels.com/photos/20049567/pexels-photo-20049567/free-photo-of-cats-and-dogs-in-cages-in-shelter.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/14096854/pexels-photo-14096854.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       buttonText: "Get Involved",
-      path: "/all-volunteer"
+      path: "/all-volunteer",
+      description: "Join our mission to protect and care for animals in need."
     },
   ];
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
-    speed: 500,
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 6000,
     fade: true,
-    cssEase: "linear",
+    cssEase: "cubic-bezier(0.4, 0, 0.2, 1)",
   };
 
   const goToPrev = () => {
@@ -67,55 +70,52 @@ const Banner = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative satoshi">
       <Slider ref={sliderRef} {...settings}>
         {bannerData.map((banner, index) => (
-          <div key={index} className="relative h-screen">
-            {/* Background Image */}
+          <div key={index} className="relative h-[90vh]">
             <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-[2s]"
               style={{
                 backgroundImage: `url(${banner.image})`,
               }}
             >
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
             </div>
 
-            {/* Content */}
             <div className="relative h-full flex items-center">
-              <div className="w-full px-4 sm:px-8 md:px-12 lg:pl-48">
+              <div className="container mx-auto px-4 lg:px-12">
                 <motion.div
                   ref={ref}
                   initial="hidden"
                   animate={controls}
                   variants={{
-                    hidden: { opacity: 0, y: 20 },
+                    hidden: { opacity: 0, y: 30 },
                     visible: {
                       opacity: 1,
                       y: 0,
                       transition: {
-                        duration: 0.6,
-                        delay: 0.3,
+                        duration: 0.8,
+                        ease: "easeOut",
                       },
                     },
                   }}
-                  className="max-w-3xl mx-auto lg:mx-0"
+                  className="max-w-4xl"
                 >
-                  <h2 className="text-white text-sm md:text-2xl lg:text-lg font-medium mb-2 sm:mb-4 tracking-[0.2rem]">
+                  <h2 className="text-[#FF640D] text-lg md:text-xl font-bold mb-4 tracking-[0.3em] animate-fadeIn">
                     {banner.title}
                   </h2>
-                  <h1 className="text-white text-2xl sm:text-3xl md:text-5xl tracking-wide font-bold leading-tight my-10">
+                  <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
                     {Array.from(banner.subtitle).map((letter, index) => (
                       <motion.span
                         key={index}
                         initial={{ opacity: 0, y: -50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
-                          duration: 0.5,
-                          delay: index * 0.1,
+                          duration: 0.6,
+                          delay: index * 0.05,
                           type: "spring",
-                          stiffness: 120,
+                          stiffness: 100,
                         }}
                         className="inline-block"
                       >
@@ -123,16 +123,20 @@ const Banner = () => {
                       </motion.span>
                     ))}
                   </h1>
+                  <p className="text-gray-200 text-lg md:text-xl mb-8 max-w-2xl">
+                    {banner.description}
+                  </p>
                   <motion.button
                     onClick={() => navigate(banner.path)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-[#FF640D] text-white px-6 sm:px-8 py-2 sm:py-3 rounded-sm text-base sm:text-lg font-semibold 
-                                                 hover:bg-[#FF640D]/90 transition-colors duration-300 flex items-center gap-2"
+                    whileHover={{ scale: 1.05, backgroundColor: "#ff4d00" }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-[#FF640D] text-white px-8 py-4 rounded-lg text-lg font-semibold 
+                             shadow-lg hover:shadow-[#FF640D]/30 transition-all duration-300 
+                             flex items-center gap-3 group"
                   >
                     {banner.buttonText}
                     <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5"
+                      className="w-6 h-6 transform group-hover:translate-x-1 transition-transform duration-300"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -152,14 +156,14 @@ const Banner = () => {
         ))}
       </Slider>
 
-      {/* Custom Navigation Arrows */}
-      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 right-4 sm:right-6 md:right-8 lg:right-10 flex items-center gap-2 sm:gap-4">
+      <div className="absolute bottom-8 right-8 flex items-center gap-4 z-10">
         <button
-          className="prev-arrow bg-white/10 hover:bg-[#FF640D] p-2 sm:p-3 rounded-full transition-colors duration-300"
+          className="p-4 rounded-full bg-white/10 backdrop-blur-sm hover:bg-[#FF640D] 
+                     transition-all duration-300 group"
           onClick={goToPrev}
         >
           <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white"
+            className="w-6 h-6 text-white transform group-hover:scale-110 transition-transform duration-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -173,11 +177,12 @@ const Banner = () => {
           </svg>
         </button>
         <button
-          className="next-arrow bg-white/10 hover:bg-[#FF640D] p-2 sm:p-3 rounded-full transition-colors duration-300"
+          className="p-4 rounded-full bg-white/10 backdrop-blur-sm hover:bg-[#FF640D]
+                     transition-all duration-300 group"
           onClick={goToNext}
         >
           <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white"
+            className="w-6 h-6 text-white transform group-hover:scale-110 transition-transform duration-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
