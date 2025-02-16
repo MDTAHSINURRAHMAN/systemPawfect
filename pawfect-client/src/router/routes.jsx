@@ -60,6 +60,10 @@ import VetDetails from "../pages/VetDetails";
 import AllVets from "../pages/AllVets";
 import FAQ from "../pages/admin/FAQ";
 import Appointments from "../pages/vet/Appoinments";
+import VetUpdate from "../pages/Member/VetUpdate";
+import VideoCall from "../pages/VideoCall";
+import Prescription from "../pages/vet/Prescription";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -225,6 +229,14 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/video-call/:appointmentId",
+        element: (
+          <PrivateRoute>
+            <VideoCall />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
@@ -338,6 +350,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/vet-appointments",
         element: <Appointments />,
+      },
+      {
+        path: "/dashboard/vet-update",
+        element: <VetUpdate />,
+      },
+      {
+        path: "/dashboard/write-prescription/:appointmentId",
+        element: <Prescription />,
       },
     ],
   },

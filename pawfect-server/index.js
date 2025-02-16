@@ -563,8 +563,6 @@ async function run() {
       }
     });
 
-
-
     // get booked volunteers
     app.get("/booked-volunteers", async (req, res) => {
       const bookedvolunteers = await paymentCollection.find().toArray();
@@ -1522,7 +1520,6 @@ async function run() {
       res.json(reports);
     });
 
-
     // Update lost pet report status
     app.patch("/lost-pets/:id", async (req, res) => {
       try {
@@ -1552,8 +1549,7 @@ async function run() {
         res.status(500).json({ message: error.message });
       }
     });
-    
-    
+
     // Delete lost pet report
     app.delete("/lost-pets/:id", async (req, res) => {
       try {
@@ -1600,14 +1596,14 @@ async function run() {
       const vet = await vetCollection.findOne({ email });
       res.json(vet);
     });
-    
+
     // add appointment
     app.post("/appointments", async (req, res) => {
       const appointment = req.body;
       const result = await appointmentCollection.insertOne(appointment);
       res.json(result);
     });
-    
+
     // get all appointments
     app.get("/appointments", async (req, res) => {
       const appointments = await appointmentCollection.find().toArray();
@@ -1617,18 +1613,50 @@ async function run() {
     // get appointments by email
     app.get("/appointments/:email", async (req, res) => {
       const { email } = req.params;
-      const appointments = await appointmentCollection.find({ vetEmail: email }).toArray();
+      const appointments = await appointmentCollection
+        .find({ vetEmail: email })
+        .toArray();
+      res.json(appointments);
+    });
+
+    // get appointments by user email
+    app.get("/appointments/user/:email", async (req, res) => {
+      const { email } = req.params;
+      const appointments = await appointmentCollection
+        .find({ ownerEmail: email })
+        .toArray();
       res.json(appointments);
     });
 
     // update appointment status
     app.patch("/appointments/:id", async (req, res) => {
-      const { id } = req.params;
-      const { status } = req.body;
-      const result = await appointmentCollection.updateOne({ _id: new ObjectId(id) }, { $set: { status } });
-      res.json(result);
+      try {
+        const { id } = req.params;
+        const { status, videoCallStatus } = req.body;
+
+        const updateData = {};
+        if (status) updateData.status = status;
+        if (videoCallStatus) updateData.videoCallStatus = videoCallStatus;
+
+        const result = await appointmentCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updateData }
+        );
+
+        // If this is a video call update, notify the other party
+        if (videoCallStatus) {
+          const appointment = await appointmentCollection.findOne({
+            _id: new ObjectId(id),
+          });
+          // You can implement notification logic here (email, push notification, etc.)
+        }
+
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
     });
-    
+
     // get all faqs
     app.get("/faqs", async (req, res) => {
       const faqs = await faqCollection.find().toArray();
@@ -1654,19 +1682,146 @@ async function run() {
     });
 
     // delete faq
-    app.delete("/faqs/:id", async (req, res) => { 
+    app.delete("/faqs/:id", async (req, res) => {
       const { id } = req.params;
       const result = await faqCollection.deleteOne({ _id: new ObjectId(id) });
       res.json(result);
     });
-    
-    
-    
-    
-    
-    
 
+    // Initiate video call
+    app.post("/video-calls/initiate", async (req, res) => {
+      try {
+        const { appointmentId, vetId, userId, petName } = req.body;
 
+        // Create a call record
+        const callData = {
+          appointmentId,
+          vetId,
+          userId,
+          petName,
+          status: "initiated",
+          startTime: new Date(),
+          roomId: `pawfect-${appointmentId}`,
+        };
+
+        await appointmentCollection.updateOne(
+          { _id: new ObjectId(appointmentId) },
+          {
+            $set: {
+              videoCallStatus: "initiated",
+              callData,
+            },
+          }
+        );
+
+        res.json({ success: true, roomId: callData.roomId });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // Check for active calls for a user
+    app.get("/appointments/active-calls/:email", async (req, res) => {
+      try {
+        const { email } = req.params;
+        const activeCall = await appointmentCollection.findOne({
+          ownerEmail: email,
+          videoCallStatus: "initiated",
+        });
+        res.json(activeCall);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // Update video call status
+    app.patch("/appointments/:id/call-status", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const result = await appointmentCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { videoCallStatus: status } }
+        );
+
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // Modify prescription endpoints
+    app.post("/prescriptions/:appointmentId", async (req, res) => {
+      try {
+        const { appointmentId } = req.params;
+        const prescriptionData = req.body;
+
+        const prescription = {
+          appointmentId: new ObjectId(appointmentId),
+          ...prescriptionData,
+          createdAt: new Date(),
+        };
+
+        const result = await db
+          .collection("prescriptions")
+          .insertOne(prescription);
+
+        // Update appointment with prescription reference
+        await appointmentCollection.updateOne(
+          { _id: new ObjectId(appointmentId) },
+          {
+            $set: {
+              hasPrescription: true,
+              prescriptionId: result.insertedId,
+            },
+          }
+        );
+
+        res.status(201).json(result);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // Add endpoint for saving PDF data
+    app.patch("/prescriptions/:appointmentId/pdf", async (req, res) => {
+      try {
+        const { appointmentId } = req.params;
+        const { pdfData } = req.body;
+
+        await db
+          .collection("prescriptions")
+          .updateOne(
+            { appointmentId: new ObjectId(appointmentId) },
+            { $set: { pdfData } }
+          );
+
+        res.json({ success: true });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+
+    // Add endpoint for getting PDF data
+    app.get("/prescriptions/:appointmentId/pdf", async (req, res) => {
+      try {
+        const { appointmentId } = req.params;
+        const prescription = await db.collection("prescriptions").findOne({
+          appointmentId: new ObjectId(appointmentId),
+        });
+
+        if (!prescription || !prescription.pdfData) {
+          return res
+            .status(404)
+            .json({ message: "Prescription PDF not found" });
+        }
+
+        res.json({ pdfData: prescription.pdfData });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });

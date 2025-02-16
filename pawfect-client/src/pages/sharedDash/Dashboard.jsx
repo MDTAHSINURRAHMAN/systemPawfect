@@ -428,9 +428,11 @@ const Dashboard = () => {
 
           {userRole === "member" && (
             <>
-            {/* <motion.li whileHover={{ scale: 1.02 }}>
+
+            {/* vet update */}
+              <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
-                  to="/dashboard/member"
+                  to="/dashboard/vet-update"
                   className={({ isActive }) =>
                     `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
                       isActive
@@ -439,10 +441,11 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  <i className="fas fa-comment-medical"></i>
-                  User Chat
+                  <i className="fas fa-calendar-check"></i>
+                  Vet Update
                 </NavLink>
-              </motion.li> */}
+              </motion.li>
+            
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/activity-logs"
