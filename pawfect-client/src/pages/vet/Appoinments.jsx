@@ -186,14 +186,12 @@ const Appointments = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  {appointment.status === "confirmed" && (
-                    <Link
+                  <Link
                     to={`/dashboard/write-prescription/${appointment._id}`}
                     className="btn btn-secondary btn-sm"
                   >
                     Generate Prescription
                   </Link>
-                  )}
                 </td>
               </motion.tr>
             ))}

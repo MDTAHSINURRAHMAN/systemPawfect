@@ -1757,9 +1757,24 @@ async function run() {
         const { appointmentId } = req.params;
         const prescriptionData = req.body;
 
+        // Get appointment details first
+        const appointment = await appointmentCollection.findOne({
+          _id: new ObjectId(appointmentId),
+        });
+
+        if (!appointment) {
+          return res.status(404).json({ message: "Appointment not found" });
+        }
+
         const prescription = {
           appointmentId: new ObjectId(appointmentId),
           ...prescriptionData,
+          appointmentDetails: {
+            petName: appointment.petName,
+            ownerName: appointment.ownerName,
+            vetName: appointment.vetName,
+            date: appointment.date,
+          },
           createdAt: new Date(),
         };
 
@@ -1803,12 +1818,19 @@ async function run() {
       }
     });
 
-    // Add endpoint for getting PDF data
+    // Get prescription by appointment ID
     app.get("/prescriptions/:appointmentId/pdf", async (req, res) => {
       try {
         const { appointmentId } = req.params;
+
+        // Get both prescription and appointment data
         const prescription = await db.collection("prescriptions").findOne({
           appointmentId: new ObjectId(appointmentId),
+        });
+
+        // Get appointment details
+        const appointment = await appointmentCollection.findOne({
+          _id: new ObjectId(appointmentId),
         });
 
         if (!prescription || !prescription.pdfData) {
@@ -1817,8 +1839,18 @@ async function run() {
             .json({ message: "Prescription PDF not found" });
         }
 
-        res.json({ pdfData: prescription.pdfData });
+        // Send both prescription and appointment data
+        res.json({
+          pdfData: prescription.pdfData,
+          appointment: {
+            petName: appointment.petName,
+            ownerName: appointment.ownerName,
+            vetName: appointment.vetName,
+            date: appointment.date,
+          },
+        });
       } catch (error) {
+        console.error("Error fetching prescription:", error);
         res.status(500).json({ message: error.message });
       }
     });

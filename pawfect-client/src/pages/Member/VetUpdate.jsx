@@ -64,18 +64,48 @@ const VetUpdate = () => {
       const response = await axios.get(
         `http://localhost:5000/prescriptions/${appointmentId}/pdf`
       );
-      const { pdfData } = response.data;
 
-      // Create a link element and trigger download
+      const { pdfData, appointment } = response.data;
+
+      // Remove the data URI prefix to get just the base64 data
+      const base64Data = pdfData.split(",")[1];
+
+      // Convert base64 to blob
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "application/pdf" });
+
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Create filename
+      const fileName = appointment?.petName
+        ? `prescription_${
+            appointment.petName
+          }_${new Date().toLocaleDateString()}.pdf`
+        : `prescription_${appointmentId}.pdf`;
+
+      // Create a link and trigger download
       const link = document.createElement("a");
-      link.href = pdfData;
-      link.download = `prescription_${appointmentId}.pdf`;
+      link.href = url;
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
+
+      // Cleanup
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Prescription downloaded successfully");
     } catch (error) {
-      toast.error("Error downloading prescription");
       console.error("Download error:", error);
+      toast.error(
+        error.response?.data?.message || "Error downloading prescription"
+      );
     }
   };
 

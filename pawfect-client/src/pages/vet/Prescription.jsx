@@ -55,73 +55,86 @@ const Prescription = () => {
   };
 
   const generateAndSavePDF = async () => {
-    const doc = new jsPDF();
-
-    // Add header with styling
-    doc.setFontSize(20);
-    doc.text("Medical Prescription", 105, 20, { align: "center" });
-
-    // Add patient info
-    doc.setFontSize(12);
-    doc.text(`Patient: ${appointment?.petName}`, 20, 40);
-    doc.text(`Owner: ${appointment?.ownerName}`, 20, 50);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 60);
-
-    // Add prescription content with sections
-    const addSection = (title, content, yStart) => {
-      doc.setFontSize(14);
-      doc.text(title, 20, yStart);
-      doc.setFontSize(12);
-      const lines = doc.splitTextToSize(content, 170);
-      doc.text(lines, 30, yStart + 10);
-      return yStart + 10 + lines.length * 7;
-    };
-
-    let yPosition = 80;
-    yPosition = addSection("Diagnosis:", prescriptionData.diagnosis, yPosition);
-    yPosition = addSection(
-      "Medications:",
-      prescriptionData.medications,
-      yPosition + 10
-    );
-    yPosition = addSection(
-      "Instructions:",
-      prescriptionData.instructions,
-      yPosition + 10
-    );
-
-    if (prescriptionData.notes) {
-      yPosition = addSection(
-        "Additional Notes:",
-        prescriptionData.notes,
-        yPosition + 10
-      );
-    }
-
-    if (prescriptionData.followUpDate) {
-      doc.setFontSize(12);
-      doc.text(
-        `Follow-up Date: ${new Date(
-          prescriptionData.followUpDate
-        ).toLocaleDateString()}`,
-        20,
-        yPosition + 10
-      );
-    }
-
-    // Convert PDF to base64
-    const pdfData = doc.output("datauristring");
-
-    // Save PDF data to server
     try {
+      if (!appointment) {
+        toast.error("Appointment data not found");
+        return;
+      }
+
+      const doc = new jsPDF();
+
+      // Add header with styling
+      doc.setFontSize(20);
+      doc.text("Medical Prescription", 105, 20, { align: "center" });
+
+      // Add patient info with error checking
+      doc.setFontSize(12);
+      doc.text(`Patient: ${appointment.petName || "N/A"}`, 20, 40);
+      doc.text(`Owner: ${appointment.ownerName || "N/A"}`, 20, 50);
+      doc.text(`Vet: ${appointment.vetName || "N/A"}`, 20, 60);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 70);
+
+      // Add prescription content with sections
+      const addSection = (title, content, yStart) => {
+        doc.setFontSize(14);
+        doc.text(title, 20, yStart);
+        doc.setFontSize(12);
+        const lines = doc.splitTextToSize(content, 170);
+        doc.text(lines, 30, yStart + 10);
+        return yStart + 10 + lines.length * 7;
+      };
+
+      let yPosition = 80;
+      yPosition = addSection(
+        "Diagnosis:",
+        prescriptionData.diagnosis,
+        yPosition
+      );
+      yPosition = addSection(
+        "Medications:",
+        prescriptionData.medications,
+        yPosition + 10
+      );
+      yPosition = addSection(
+        "Instructions:",
+        prescriptionData.instructions,
+        yPosition + 10
+      );
+
+      if (prescriptionData.notes) {
+        yPosition = addSection(
+          "Additional Notes:",
+          prescriptionData.notes,
+          yPosition + 10
+        );
+      }
+
+      if (prescriptionData.followUpDate) {
+        doc.setFontSize(12);
+        doc.text(
+          `Follow-up Date: ${new Date(
+            prescriptionData.followUpDate
+          ).toLocaleDateString()}`,
+          20,
+          yPosition + 10
+        );
+      }
+
+      // Convert PDF to base64 with data URI
+      const pdfData = doc.output("datauristring");
+
+      // Save PDF data to server
       await axios.patch(
         `http://localhost:5000/prescriptions/${appointmentId}/pdf`,
         {
           pdfData: pdfData,
         }
       );
+
+      toast.success("PDF generated successfully");
     } catch (error) {
-      console.error("Error saving PDF:", error);
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to generate PDF");
     }
   };
 
