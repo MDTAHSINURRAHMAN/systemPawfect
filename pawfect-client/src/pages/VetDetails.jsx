@@ -4,11 +4,18 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaUserMd, FaPhone, FaEnvelope, FaMapMarkerAlt, FaGraduationCap, FaClock, FaDollarSign, FaLanguage } from 'react-icons/fa';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
 const VetDetails = () => {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [petName, setPetName] = useState('');
+  const [petAge, setPetAge] = useState('');
+  const [petType, setPetType] = useState('');
+  const [reason, setReason] = useState('');
 
   const { data: vet, isLoading } = useQuery({
     queryKey: ['vet', id],
@@ -20,15 +27,38 @@ const VetDetails = () => {
 
   const handleAppointmentSubmit = async (e) => {
     e.preventDefault();
-    // Add appointment booking logic here
     try {
-      await axios.post('http://localhost:5000/appointments', {
+      const appointmentData = {
         vetId: id,
+        vetName: vet.name,
+        vetEmail: vet.email,
+        vetSpecialization: vet.specialization,
+        vetPhone: vet.phone,
+        consultationFee: vet.consultationFees,
+        ownerName: user.name,
+        ownerEmail: user.email,
+        ownerPhone: user.phone,
+        petName,
+        petAge,
+        petType,
+        reason,
         date: selectedDate,
         time: selectedTime,
-        // Add other appointment details
-      });
+        status: 'pending',
+        createdAt: new Date()
+      };
+
+      await axios.post('http://localhost:5000/appointments', appointmentData);
       alert('Appointment booked successfully!');
+      
+      // Reset form
+      setSelectedDate('');
+      setSelectedTime('');
+      setPetName('');
+      setPetAge('');
+      setPetType('');
+      setReason('');
+      
     } catch (error) {
       console.error('Error booking appointment:', error);
       alert('Failed to book appointment');
@@ -120,6 +150,62 @@ const VetDetails = () => {
             <div className="bg-gray-50 rounded-xl p-6">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6">Book an Appointment</h2>
               <form onSubmit={handleAppointmentSubmit} className="space-y-4">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Pet Name</span>
+                  </label>
+                  <input 
+                    type="text"
+                    value={petName}
+                    onChange={(e) => setPetName(e.target.value)}
+                    className="input input-bordered"
+                    required
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Pet Age</span>
+                  </label>
+                  <input 
+                    type="text"
+                    value={petAge}
+                    onChange={(e) => setPetAge(e.target.value)}
+                    className="input input-bordered"
+                    required
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Pet Type</span>
+                  </label>
+                  <select
+                    value={petType}
+                    onChange={(e) => setPetType(e.target.value)}
+                    className="select select-bordered"
+                    required
+                  >
+                    <option value="">Select pet type</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Reason for Visit</span>
+                  </label>
+                  <textarea
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    className="textarea textarea-bordered"
+                    required
+                  ></textarea>
+                </div>
+
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">Select Date</span>

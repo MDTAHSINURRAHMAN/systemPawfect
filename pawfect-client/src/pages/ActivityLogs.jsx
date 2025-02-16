@@ -9,18 +9,18 @@ const ActivityLogs = () => {
   const [selectedFeedback, setSelectedFeedback] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  const { data: trainers = [], isLoading } = useQuery({
-    queryKey: ["trainers"],
+  const { data: volunteers = [], isLoading } = useQuery({
+    queryKey: ["volunteers"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/all-trainers");
+      const { data } = await axios.get("http://localhost:5000/all-volunteers");
       return data;
     },
   });
 
-  const handleViewFeedback = async (trainer) => {
+  const handleViewFeedback = async (volunteer) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/feedback/${trainer.email}`
+        `http://localhost:5000/feedback/${volunteer.email}`
       );
       setSelectedFeedback(data?.feedback || "No feedback provided");
       setShowModal(true);
@@ -49,7 +49,7 @@ const ActivityLogs = () => {
         transition={{ duration: 0.5 }}
         className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 lg:mb-12 text-center bg-gradient-to-r from-[#FF640D] to-orange-600 bg-clip-text text-transparent"
       >
-        Trainer Application Status
+        Volunteer Application Status
       </motion.h2>
 
       <motion.div
@@ -76,9 +76,9 @@ const ActivityLogs = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-orange-100">
-            {trainers.map((trainer, index) => (
+            {volunteers.map((volunteer, index) => (
               <motion.tr
-                key={trainer._id}
+                key={volunteer._id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -89,31 +89,31 @@ const ActivityLogs = () => {
                 className="hover:bg-orange-50/30 transition-colors duration-200"
               >
                 <td className="px-4 sm:px-6 py-4 text-sm sm:text-base">
-                  {trainer.fullName}
+                  {volunteer.fullName}
                 </td>
                 <td className="px-4 sm:px-6 py-4 text-sm sm:text-base">
-                  {trainer.email}
+                  {volunteer.email}
                 </td>
                 <td className="px-4 sm:px-6 py-4">
                   <motion.span
                     whileHover={{ scale: 1.05 }}
                     className={`px-3 py-1 rounded-full text-sm ${
-                      trainer.status === "active"
+                      volunteer.status === "active"
                         ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800"
-                        : trainer.status === "rejected"
+                        : volunteer.status === "rejected"
                         ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800"
                         : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800"
                     }`}
                   >
-                    {trainer.status}
+                    {volunteer.status}
                   </motion.span>
                 </td>
                 <td className="px-4 sm:px-6 py-4">
-                  {trainer.status === "rejected" && (
+                  {volunteer.status === "rejected" && (
                     <motion.button
                       whileHover={{ scale: 1.1, color: "#FF640D" }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleViewFeedback(trainer)}
+                      onClick={() => handleViewFeedback(volunteer)}
                       className="text-blue-600 hover:text-[#FF640D] transition-colors duration-300"
                     >
                       <FaEye className="text-xl" />

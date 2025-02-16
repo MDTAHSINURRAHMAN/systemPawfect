@@ -21,6 +21,15 @@ const Dashboard = () => {
     },
   });
 
+  // Fetch vet data
+  // const { data: vetData } = useQuery({
+  //   queryKey: ["vet", user?.email],
+  //   queryFn: async () => {
+  //     const res = await axios.get(`http://localhost:5000/vets/${user?.email}`);
+  //     return res.data;
+  //   },
+  // });
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -466,7 +475,7 @@ const Dashboard = () => {
               </motion.li>
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
-                  to="/dashboard/booked-trainers"
+                  to="/dashboard/booked-volunteers"
                   className={({ isActive }) =>
                     `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
                       isActive
@@ -492,6 +501,26 @@ const Dashboard = () => {
                 >
                   <i className="fas fa-home"></i>
                   Home
+                </NavLink>
+              </motion.li>
+            </>
+          )}
+
+          {userRole === "vet" && (
+            <>
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/vet-appointments"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-calendar-check"></i>
+                  Appointments
                 </NavLink>
               </motion.li>
             </>

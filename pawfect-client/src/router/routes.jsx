@@ -59,6 +59,7 @@ import Vet from "../pages/admin/Vet";
 import VetDetails from "../pages/VetDetails";
 import AllVets from "../pages/AllVets";
 import FAQ from "../pages/admin/FAQ";
+import Appointments from "../pages/vet/Appoinments";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -307,7 +308,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/dashboard/booked-trainers",
+        path: "/dashboard/booked-volunteers",
         element: <BookedTrainers />,
       },
       {
@@ -333,6 +334,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/faq",
         element: <FAQ />,
+      },
+      {
+        path: "/dashboard/vet-appointments",
+        element: <Appointments />,
       },
     ],
   },

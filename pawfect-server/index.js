@@ -563,6 +563,8 @@ async function run() {
       }
     });
 
+
+
     // get booked volunteers
     app.get("/booked-volunteers", async (req, res) => {
       const bookedvolunteers = await paymentCollection.find().toArray();
@@ -1591,6 +1593,13 @@ async function run() {
       const vet = await vetCollection.findOne({ _id: new ObjectId(id) });
       res.json(vet);
     });
+
+    // get vet by email
+    app.get("/vets/:email", async (req, res) => {
+      const { email } = req.params;
+      const vet = await vetCollection.findOne({ email });
+      res.json(vet);
+    });
     
     // add appointment
     app.post("/appointments", async (req, res) => {
@@ -1603,6 +1612,21 @@ async function run() {
     app.get("/appointments", async (req, res) => {
       const appointments = await appointmentCollection.find().toArray();
       res.json(appointments);
+    });
+
+    // get appointments by email
+    app.get("/appointments/:email", async (req, res) => {
+      const { email } = req.params;
+      const appointments = await appointmentCollection.find({ vetEmail: email }).toArray();
+      res.json(appointments);
+    });
+
+    // update appointment status
+    app.patch("/appointments/:id", async (req, res) => {
+      const { id } = req.params;
+      const { status } = req.body;
+      const result = await appointmentCollection.updateOne({ _id: new ObjectId(id) }, { $set: { status } });
+      res.json(result);
     });
     
     // get all faqs

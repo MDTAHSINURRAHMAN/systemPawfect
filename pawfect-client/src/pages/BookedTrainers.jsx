@@ -18,7 +18,9 @@ const BookedTrainers = () => {
   const { data: bookedTrainers, isLoading } = useQuery({
     queryKey: ["bookedTrainers", user?.email],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/booked-trainers`);
+      const response = await axios.get(
+        `http://localhost:5000/booked-volunteers`
+      );
       return response.data;
     },
   });
@@ -87,7 +89,7 @@ const BookedTrainers = () => {
         animate={{ x: 0 }}
         className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent"
       >
-        My Booked Trainers
+        My Booked Volunteers
       </motion.h1>
 
       <motion.div
@@ -153,12 +155,12 @@ const BookedTrainers = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link
+                {/* <Link
                   to={`/trainer/${booking.trainerId}`}
                   className="block w-auto text-center bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1.5 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300 text-sm"
                 >
-                  View Trainer
-                </Link>
+                  View Volunteer
+                </Link> */}
               </motion.div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
