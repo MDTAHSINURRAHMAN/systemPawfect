@@ -60,7 +60,7 @@ const AllVets = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <FaMapMarkerAlt className="text-orange-500 text-xl" />
-                  <span className="text-gray-700">{vet.location}</span>
+                  <span className="text-gray-700">{vet.address}</span>
                 </div>
                 
                 <div className="flex justify-between items-center">

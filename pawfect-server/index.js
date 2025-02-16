@@ -569,6 +569,13 @@ async function run() {
       res.json(bookedvolunteers);
     });
 
+    // get booked volunteers by email
+    app.get("/booked-volunteers/:email", async (req, res) => {
+      const email = req.params.email;
+      const bookedvolunteers = await paymentCollection.find({ userEmail: email }).toArray();
+      res.json(bookedvolunteers);
+    });
+
     // chat with volunteers by id
     app.get("/chat-with-volunteer/:id", async (req, res) => {
       const id = req.params.id;
@@ -1854,6 +1861,45 @@ async function run() {
         res.status(500).json({ message: error.message });
       }
     });
+
+    // get all product payments
+    app.get("/product-payments", async (req, res) => {
+      const productPayments = await productPaymentCollection.find().toArray();
+      res.json(productPayments);
+    });
+
+    // get product payments by user id  
+    app.get("/product-payments/:userId", async (req, res) => {
+      const { userId } = req.params;
+      const productPayments = await productPaymentCollection
+        .find({ userId })
+        .toArray();
+      res.json(productPayments);
+    });
+
+    // get product payments by user email
+    app.get("/adopt-pet-payments/:email", async (req, res) => {
+      const { email } = req.params;
+      const productPayments = await adoptPetPaymentCollection
+        .find({ cus_email: email })
+        .toArray();
+      res.json(productPayments);
+    });
+
+    // get all reviews
+    app.get("/reviews", async (req, res) => {
+      const reviews = await reviewCollection.find().toArray();
+      res.json(reviews);
+    });
+
+    // get reviews by user email
+    app.get("/reviews/:email", async (req, res) => {
+      const { email } = req.params;
+      const reviews = await reviewCollection.find({ userEmail: email }).toArray();
+      res.json(reviews);
+    });
+    
+    
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });

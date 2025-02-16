@@ -476,6 +476,42 @@ const Dashboard = () => {
                   Profile
                 </NavLink>
               </motion.li>
+
+              {/* product bought */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/product-bought"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-shopping-cart"></i>
+                  Product Bought
+                </NavLink>
+              </motion.li>
+
+              {/* pet bought */}
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/pet-bought"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-paw"></i>
+                  Pet Bought
+                </NavLink>
+              </motion.li>
+              
+
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/booked-volunteers"
@@ -491,6 +527,25 @@ const Dashboard = () => {
                   Booked Volunteers
                 </NavLink>
               </motion.li>
+
+
+
+              <motion.li whileHover={{ scale: 1.02 }}>
+                <NavLink
+                  to="/dashboard/my-reviews"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"
+                        : "hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  <i className="fas fa-star"></i>
+                  My Reviews
+                </NavLink>
+              </motion.li>
+              
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/"

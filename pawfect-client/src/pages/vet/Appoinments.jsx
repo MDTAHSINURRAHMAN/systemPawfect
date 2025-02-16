@@ -185,7 +185,15 @@ const Appointments = () => {
                     {appointment.status}
                   </span>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 space-x-2">
+                  {appointment.status === "confirmed" && (
+                    <button
+                      onClick={() => initiateCall(appointment)}
+                      className="btn btn-primary btn-sm"
+                    >
+                      Make Call
+                    </button>
+                  )}
                   <Link
                     to={`/dashboard/write-prescription/${appointment._id}`}
                     className="btn btn-secondary btn-sm"

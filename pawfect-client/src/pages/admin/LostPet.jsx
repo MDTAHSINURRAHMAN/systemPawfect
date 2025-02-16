@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPaw, FaMapMarkerAlt, FaPhoneAlt, FaUserAlt, FaCalendarAlt } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LostPet = () => {
   const queryClient = useQueryClient();
@@ -79,73 +80,126 @@ const LostPet = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 md:p-8">
-      <h2 className="text-3xl font-bold mb-6">Lost Pet Reports</h2>
-      <div className="grid gap-6">
-        {lostPets.map((pet) => (
-          <div key={pet._id} className="bg-white p-6 rounded-xl shadow-lg">
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="w-full md:w-1/4">
-                <img
-                  src={pet.petImage}
-                  alt={pet.petName}
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-xl font-semibold">{pet.petName}</h3>
-                    <p className="text-gray-600">{pet.breed}</p>
-                    <p className="text-gray-600">{pet.description}</p>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="p-4 md:p-8 min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50"
+    >
+      <motion.h2
+        initial={{ y: -20 }}
+        animate={{ y: 0 }}
+        className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-[#FF640D] to-orange-600 bg-clip-text text-transparent"
+      >
+        Lost Pet Reports
+      </motion.h2>
+
+      <AnimatePresence>
+        <div className="grid gap-6">
+          {lostPets.map((pet, index) => (
+            <motion.div
+              key={pet._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-orange-100"
+            >
+              <div className="flex flex-col lg:flex-row gap-6">
+                <div className="w-full lg:w-1/3">
+                  <img
+                    src={pet.petImage}
+                    alt={pet.petName}
+                    className="w-full h-64 lg:h-80 object-cover rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+                  />
+                </div>
+                
+                <div className="flex-1 space-y-4">
+                  <div className="flex justify-between items-start flex-wrap gap-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-2">{pet.petName}</h3>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <FaPaw className="text-orange-500" />
+                        <span>{pet.breed}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 flex-wrap">
+                      {!pet.approved ? (
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleApprove(pet)}
+                          className="px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md"
+                        >
+                          Approve
+                        </motion.button>
+                      ) : (
+                        <>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleStatusUpdate(pet)}
+                            className={`px-6 py-2 text-white rounded-xl shadow-md ${
+                              pet.status === "lost" 
+                                ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700" 
+                                : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                            }`}
+                          >
+                            Mark as {pet.status === "lost" ? "Found" : "Lost"}
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleDelete(pet._id)}
+                            className="p-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md"
+                          >
+                            <FaTrash />
+                          </motion.button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className="space-x-2">
-                    {!pet.approved ? (
-                      <button
-                        onClick={() => handleApprove(pet)}
-                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                      >
-                        Approve
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handleStatusUpdate(pet)}
-                          className={`px-4 py-2 ${
-                            pet.status === "lost" ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
-                          } text-white rounded-lg mr-2`}
-                        >
-                          Mark as {pet.status === "lost" ? "Found" : "Lost"}
-                        </button>
-                        <button
-                          onClick={() => handleDelete(pet._id)}
-                          className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        >
-                          <FaTrash />
-                        </button>
-                      </>
-                    )}
+
+                  <p className="text-gray-600 mt-2">{pet.description}</p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <FaUserAlt className="text-orange-500" />
+                      <span>Owner: {pet.ownerName}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <FaPhoneAlt className="text-orange-500" />
+                      <span>Contact: {pet.contactNumber}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <FaCalendarAlt className="text-orange-500" />
+                      <span>Last Seen: {new Date(pet.lastSeenDate).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-3 py-1 rounded-full text-sm ${
+                        !pet.approved 
+                          ? "bg-yellow-100 text-yellow-700"
+                          : pet.status === "lost"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-green-100 text-green-700"
+                      }`}>
+                        {!pet.approved ? "Pending Approval" : pet.status === "lost" ? "Lost" : "Found"}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="mt-4 text-sm text-gray-500">
-                  <p>Owner: {pet.ownerName}</p>
-                  <p>Contact: {pet.contactNumber}</p>
-                  <p>Last Seen: {new Date(pet.lastSeenDate).toLocaleDateString()}</p>
-                  <p>Status: {pet.approved ? (pet.status === "lost" ? "Lost" : "Found") : "Pending Approval"}</p>
-                </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+            </motion.div>
+          ))}
+        </div>
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

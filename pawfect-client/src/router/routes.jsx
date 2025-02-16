@@ -63,7 +63,9 @@ import Appointments from "../pages/vet/Appoinments";
 import VetUpdate from "../pages/Member/VetUpdate";
 import VideoCall from "../pages/VideoCall";
 import Prescription from "../pages/vet/Prescription";
-
+import ProductBought from "../pages/Member/ProductBought";
+import PetBought from "../pages/Member/PetBought";
+import MyReviews from "../pages/Member/My Reviews";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -358,6 +360,18 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/write-prescription/:appointmentId",
         element: <Prescription />,
+      },
+      {
+        path: "/dashboard/product-bought",
+        element: <ProductBought />,
+      },
+      {
+        path: "/dashboard/pet-bought",
+        element: <PetBought />,
+      },
+      {
+        path: "/dashboard/my-reviews",
+        element: <MyReviews />,
       },
     ],
   },

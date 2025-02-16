@@ -19,7 +19,7 @@ const BookedTrainers = () => {
     queryKey: ["bookedTrainers", user?.email],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/booked-volunteers`
+        `http://localhost:5000/booked-volunteers/${user?.email}`
       );
       return response.data;
     },
@@ -82,7 +82,11 @@ const BookedTrainers = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="container mx-auto px-4 py-8"
+      className="container mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50"
+      style={{
+        backgroundImage:
+          "url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFA500' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
+      }}
     >
       <motion.h1
         initial={{ x: -50 }}
@@ -103,9 +107,13 @@ const BookedTrainers = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{
+              scale: 1.02,
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            }}
             key={booking._id}
-            className="bg-gradient-to-br from-gray-50 to-white text-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 hover:shadow-orange-500/20 transition-all duration-300"
+            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-orange-100 hover:shadow-orange-500/20 transition-all duration-300"
           >
             {/* Booking Info Section */}
             <div className="mb-6">
