@@ -76,7 +76,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-gray-300 font-bold border-gray-300"
+                ? "text-orange-500 font-bold border-orange-500"
                 : "text-gray- hover:text-[#FF640D] transition-all duration-300"
             }`
           }
@@ -90,7 +90,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-gray-300 font-bold border-gray-300"
+                ? "text-orange-500 font-bold border-orange-500"
                 : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
@@ -104,7 +104,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-gray-300 font-bold border-gray-300"
+                ? "text-orange-500 font-bold border-orange-500"
                 : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
@@ -118,7 +118,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-gray-300 font-bold border-gray-300"
+                ? "text-orange-500 font-bold border-orange-500"
                 : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
@@ -133,7 +133,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-gray-300 font-bold border-gray-300"
+                ? "text-orange-500 font-bold border-orange-500"
                 : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
@@ -148,7 +148,7 @@ const Navbar = () => {
           className={({ isActive }) =>
             `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
               isActive
-                ? "text-gray-300 font-bold border-gray-300"
+                ? "text-orange-500 font-bold border-orange-500"
                 : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
             }`
           }
@@ -163,7 +163,7 @@ const Navbar = () => {
             className={({ isActive }) =>
               `text-base font-medium tracking-wide border border-transparent hover:border-[#FF640D] rounded-md px-3 py-1.5 ${
                 isActive
-                  ? "text-gray-300 font-bold border-gray-300"
+                  ? "text-orange-500 font-bold border-orange-500"
                   : "text-gray-700 hover:text-[#FF640D] transition-all duration-300"
               }`
             }
@@ -176,89 +176,92 @@ const Navbar = () => {
   );
 
   return (
-    <nav
-      className={`fixed w-full z-[1000] transition-all duration-500 ${
-        isScrolled 
-          ? "bg-white/95 backdrop-blur-md shadow-lg py-2" 
-          : "bg-transparent py-4"
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link to="/" className="flex-shrink-0">
-                <img
-                  src={logo}
-                  alt="Pawfect Logo"
-                  className="w-20 md:w-24 hover:brightness-110 transition-all duration-300"
-                />
-              </Link>
-            </motion.div>
-
-            <ul className="hidden lg:flex items-center gap-8">
-              {links}
-            </ul>
-          </div>
-
-          <div className="hidden lg:flex items-center gap-6">
-            {user ? (
-              <div className="flex items-center gap-4">
-                <img
-                  className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-200 ring-offset-2"
-                  src={userData?.photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg"}
-                  alt={userData?.name}
-                />
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleLogout}
-                  className="px-6 py-2.5 text-[#FF640D]/90 border-2 border-[#FF640D]/90 rounded-lg font-medium hover:bg-[#FF640D]/90 hover:text-white transition-all duration-300"
-                >
-                  Logout
-                </motion.button>
-              </div>
-            ) : (
-              <Link to="/login">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-6 py-2.5 bg-[#FF640D]/90 text-white rounded-lg font-medium hover:bg-[#ff5500]/90 transition-all duration-300"
-                >
-                  Sign In
-                </motion.button>
-              </Link>
-            )}
-          </div>
-
-          {/* Mobile Menu */}
-          <div className="lg:hidden">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="p-2 rounded-lg hover:bg-gray-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+    <>
+      <nav
+        className={`sticky top-0 w-full z-[1000] transition-all duration-500 ${
+          isScrolled 
+            ? "bg-white/95 backdrop-blur-md shadow-lg py-2" 
+            : "bg-white py-4"
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-8">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-            </motion.button>
+                <Link to="/" className="flex-shrink-0">
+                  <img
+                    src={logo}
+                    alt="Pawfect Logo"
+                    className="w-20 md:w-24 hover:brightness-110 transition-all duration-300"
+                  />
+                </Link>
+              </motion.div>
+
+              <ul className="hidden lg:flex items-center gap-8">
+                {links}
+              </ul>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-6">
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <img
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-200 ring-offset-2"
+                    src={userData?.photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg"}
+                    alt={userData?.name}
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleLogout}
+                    className="px-6 py-2.5 text-[#FF640D]/90 border-2 border-[#FF640D]/90 rounded-lg font-medium hover:bg-[#FF640D]/90 hover:text-white transition-all duration-300"
+                  >
+                    Logout
+                  </motion.button>
+                </div>
+              ) : (
+                <Link to="/login">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-6 py-2.5 bg-[#FF640D]/90 text-white rounded-lg font-medium hover:bg-[#ff5500]/90 transition-all duration-300"
+                  >
+                    Sign In
+                  </motion.button>
+                </Link>
+              )}
+            </div>
+
+            {/* Mobile Menu */}
+            <div className="lg:hidden">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="p-2 rounded-lg hover:bg-gray-100"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                </svg>
+              </motion.button>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+      {/* <div className="h-[72px]"></div> */}
+    </>
   );
 };
 

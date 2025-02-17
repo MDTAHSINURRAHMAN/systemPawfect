@@ -34,7 +34,7 @@ const ClassDetails = () => {
       <Helmet>
         <title>Pawfect | {product?.name}</title>
       </Helmet>
-      <div className="min-h-screen py-28 bg-gradient-to-br from-orange-50 via-white to-orange-100">
+      <div className="min-h-screen py-12 bg-gradient-to-br from-orange-50 via-white to-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

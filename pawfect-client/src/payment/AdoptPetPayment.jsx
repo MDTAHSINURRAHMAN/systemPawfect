@@ -86,7 +86,7 @@ const AdoptPetPayment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 py-28 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 py-12 px-4">
       <div className="container mx-auto max-w-6xl">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

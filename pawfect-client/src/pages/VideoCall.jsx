@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { FaVideo, FaUserMd, FaPaw } from "react-icons/fa";
 
 const VideoCall = () => {
   const { appointmentId } = useParams();
   const [api, setApi] = useState(null);
   const [isCallStarted, setIsCallStarted] = useState(false);
 
-  const { data: appointment } = useQuery({
+  const { data: appointment, isLoading } = useQuery({
     queryKey: ["appointment", appointmentId],
     queryFn: async () => {
       const res = await axios.get(
@@ -47,40 +49,33 @@ const VideoCall = () => {
             "chat",
             "recording",
             "livestreaming",
-            "etherpad",
-            "sharedvideo",
             "settings",
             "raisehand",
             "videoquality",
             "filmstrip",
-            "feedback",
-            "stats",
             "shortcuts",
             "tileview",
             "videobackgroundblur",
-            "download",
             "help",
-            "mute-everyone",
           ],
+          SHOW_JITSI_WATERMARK: false,
+          SHOW_WATERMARK_FOR_GUESTS: false,
+          DEFAULT_BACKGROUND: "#FFF7ED",
         },
       };
 
-      // Initialize Jitsi Meet
       const jitsiAPI = new window.JitsiMeetExternalAPI(domain, options);
       setApi(jitsiAPI);
 
-      // Handle video call events
       jitsiAPI.addEventListeners({
         videoConferenceJoined: () => {
           setIsCallStarted(true);
-          // Update appointment status to "in-progress"
           axios.patch(`http://localhost:5000/appointments/${appointmentId}`, {
             status: "in-progress",
           });
         },
         videoConferenceLeft: () => {
           setIsCallStarted(false);
-          // Update appointment status to "completed"
           axios.patch(`http://localhost:5000/appointments/${appointmentId}`, {
             status: "completed",
           });
@@ -95,24 +90,53 @@ const VideoCall = () => {
     }
   }, [appointment, appointmentId]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-orange-500"></span>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100">
+      <div className="container mx-auto px-4 py-6 md:py-8 lg:py-12">
         {appointment && (
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold">
-              Video Consultation: {appointment.petName}
-            </h2>
-            <p className="text-gray-600">
-              {appointment.vetName} - {appointment.ownerName}
-            </p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 flex items-center gap-3">
+                <FaVideo className="text-orange-500" />
+                Video Consultation
+              </h2>
+              
+              <div className="grid md:grid-cols-2 gap-4 text-gray-600">
+                <div className="flex items-center gap-2">
+                  <FaPaw className="text-orange-500" />
+                  <span className="font-medium">Pet:</span> {appointment.petName}
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaUserMd className="text-orange-500" />
+                  <span className="font-medium">Vet:</span> {appointment.vetName}
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
 
-        <div
-          id="jitsi-container"
-          className="w-full h-[80vh] rounded-lg overflow-hidden shadow-lg"
-        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-2xl shadow-xl overflow-hidden"
+        >
+          <div
+            id="jitsi-container"
+            className="w-full h-[60vh] md:h-[70vh] lg:h-[80vh]"
+          />
+        </motion.div>
       </div>
     </div>
   );

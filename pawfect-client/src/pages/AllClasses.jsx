@@ -66,7 +66,7 @@ const AllClasses = () => {
       <Helmet>
         <title>Pawfect | Pet Products</title>
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 py-28">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 py-12">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: -20 }}

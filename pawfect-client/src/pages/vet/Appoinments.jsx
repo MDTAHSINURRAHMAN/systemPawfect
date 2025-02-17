@@ -95,6 +95,7 @@ const Appointments = () => {
             <tr className="bg-gray-100">
               <th className="px-4 py-3">Pet Owner</th>
               <th className="px-4 py-3">Pet Name</th>
+              <th className="px-4 py-3">Reason</th>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Time</th>
               <th className="px-4 py-3">Status</th>
@@ -111,6 +112,7 @@ const Appointments = () => {
               >
                 <td className="px-4 py-3">{appointment.ownerEmail}</td>
                 <td className="px-4 py-3">{appointment.petName}</td>
+                <td className="px-4 py-3">{appointment.reason}</td>
                 <td className="px-4 py-3">{appointment.date}</td>
                 <td className="px-4 py-3">{appointment.time}</td>
                 <td className="px-4 py-3">
@@ -119,22 +121,24 @@ const Appointments = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <button
-                    onClick={() =>
-                      handleStatusChange(appointment._id, "confirmed")
-                    }
-                    className="btn btn-success btn-sm mr-2"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleStatusChange(appointment._id, "rejected")
-                    }
-                    className="btn btn-error btn-sm"
-                  >
-                    Reject
-                  </button>
+                  <div className="flex items-center justify-center">
+                    <button
+                      onClick={() =>
+                        handleStatusChange(appointment._id, "confirmed")
+                      }
+                      className="btn btn-outline border-orange-500 text-orange-500 btn-sm mr-2"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleStatusChange(appointment._id, "rejected")
+                      }
+                      className="btn btn-outline border-red-500 text-red-500 btn-sm"
+                    >
+                      Reject
+                    </button>
+                  </div>
                 </td>
               </motion.tr>
             ))}
@@ -156,6 +160,7 @@ const Appointments = () => {
             <tr className="bg-gray-100">
               <th className="px-4 py-3">Pet Owner</th>
               <th className="px-4 py-3">Pet Name</th>
+              <th className="px-4 py-3">Reason</th>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Time</th>
               <th className="px-4 py-3">Status</th>
@@ -172,6 +177,7 @@ const Appointments = () => {
               >
                 <td className="px-4 py-3">{appointment.ownerEmail}</td>
                 <td className="px-4 py-3">{appointment.petName}</td>
+                <td className="px-4 py-3">{appointment.reason}</td>
                 <td className="px-4 py-3">{appointment.date}</td>
                 <td className="px-4 py-3">{appointment.time}</td>
                 <td className="px-4 py-3">
@@ -185,7 +191,7 @@ const Appointments = () => {
                     {appointment.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 space-x-2">
+                <td className="flex flex-col gap-2">
                   {appointment.status === "confirmed" && (
                     <button
                       onClick={() => initiateCall(appointment)}
