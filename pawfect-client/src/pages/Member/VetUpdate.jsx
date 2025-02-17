@@ -185,7 +185,7 @@ const VetUpdate = () => {
                   {appointment.hasPrescription && (
                     <button
                       onClick={() => handleDownloadPDF(appointment._id)}
-                      className="btn btn-primary btn-sm"
+                      className="btn bg-orange-500 hover:bg-orange-600 text-white border-none"
                     >
                       Download Prescription
                     </button>

@@ -28,7 +28,7 @@ const SalesReport = () => {
       <div className="stats shadow">
         <div className="stat">
           <div className="stat-title">Total Sales</div>
-          <div className="stat-value text-primary">${totalEarnings.toFixed(2)}</div>
+          <div className="stat-value text-orange-500">${totalEarnings.toFixed(2)}</div>
           <div className="stat-desc">From all completed payments</div>
         </div>
       </div>

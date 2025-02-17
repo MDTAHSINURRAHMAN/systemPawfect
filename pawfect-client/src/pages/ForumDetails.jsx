@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -12,6 +12,7 @@ const ForumDetails = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
+  const [comment, setComment] = useState("");
 
   const {
     data: forum,
@@ -23,6 +24,14 @@ const ForumDetails = () => {
       const response = await axios.get(`http://localhost:5000/forums/${id}`);
       return response.data;
     },
+  });
+
+  const { data: comments = [] } = useQuery({
+    queryKey: ["comments", id],
+    queryFn: async () => {
+      const response = await axios.get(`http://localhost:5000/forums/${id}/comments`);
+      return response.data;
+    }
   });
 
   const voteMutation = useMutation({
@@ -45,12 +54,79 @@ const ForumDetails = () => {
     },
   });
 
+  const commentMutation = useMutation({
+    mutationFn: async (commentData) => {
+      const response = await axios.post(
+        `http://localhost:5000/forums/${id}/comments`,
+        commentData
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["forum", id]);
+      queryClient.invalidateQueries(["comments", id]);
+      setComment("");
+      toast.success("Comment added successfully!");
+    },
+    onError: () => {
+      toast.error("Failed to add comment. Please try again.");
+    },
+  });
+
+  const commentVoteMutation = useMutation({
+    mutationFn: async ({ commentId, voteType }) => {
+      const response = await axios.post(
+        `http://localhost:5000/forums/${id}/comments/${commentId}/vote`,
+        {
+          userId: user?._id,
+          voteType,
+        }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["forum", id]);
+      queryClient.invalidateQueries(["comments", id]);
+      toast.success("Comment vote recorded!");
+    },
+    onError: () => {
+      toast.error("Failed to vote on comment.");
+    },
+  });
+
   const handleVote = (voteType) => {
     if (!user) {
       toast.error("Please log in to vote");
       return;
     }
     voteMutation.mutate({ voteType });
+  };
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (!user) {
+      toast.error("Please log in to comment");
+      return;
+    }
+    if (!comment.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+    commentMutation.mutate({
+      content: comment,
+      forumId: id,
+      authorId: user?._id,
+      authorEmail: user?.email,
+      createdAt: new Date(),
+    });
+  };
+
+  const handleCommentVote = (commentId, voteType) => {
+    if (!user) {
+      toast.error("Please log in to vote");
+      return;
+    }
+    commentVoteMutation.mutate({ commentId, voteType });
   };
 
   if (isLoading) {
@@ -156,12 +232,12 @@ const ForumDetails = () => {
                 className="flex flex-wrap gap-4 text-sm text-gray-600"
               >
                 <div className="flex items-center gap-2">
-                  <img
+                  {/* <img
                     src={`https://ui-avatars.com/api/?name=${forum.authorName}&background=random`}
                     alt={forum.authorName}
                     className="w-6 h-6 rounded-full"
-                  />
-                  <span>{forum.authorName}</span>
+                  /> */}
+                  <span>{forum.authorEmail}</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <span>
@@ -173,7 +249,7 @@ const ForumDetails = () => {
                   </span>
                   <span className="flex items-center gap-1">
                     <FaComments className="text-orange-500" />
-                    {forum.comments?.length || 0} comments
+                    {comments.length || 0} comments
                   </span>
                 </div>
               </motion.div>
@@ -189,6 +265,93 @@ const ForumDetails = () => {
             <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
               {forum.content}
             </div>
+          </motion.div>
+
+          {/* Comments Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="mt-12"
+          >
+            <h2 className="text-2xl font-bold mb-6">Comments</h2>
+
+            {/* Comments List */}
+            <div className="space-y-6 mb-8">
+              {comments.map((comment) => {
+                const commentUpvotes = comment.votes?.filter((v) => v.type === "upvote").length || 0;
+                const commentDownvotes = comment.votes?.filter((v) => v.type === "downvote").length || 0;
+                const commentTotalVotes = commentUpvotes - commentDownvotes;
+
+                return (
+                  <motion.div
+                    key={comment._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex gap-4 bg-gray-50 p-4 rounded-lg"
+                  >
+                    <div className="flex flex-col items-center">
+                      <button
+                        onClick={() => handleCommentVote(comment._id, "upvote")}
+                        className={`p-1 rounded-full ${
+                          comment.votes?.find(
+                            (v) => v.userId === user?._id && v.type === "upvote"
+                          )
+                            ? "text-orange-500"
+                            : "text-gray-400 hover:text-orange-500"
+                        }`}
+                      >
+                        <FaArrowUp />
+                      </button>
+                      <span className="text-sm font-semibold">{commentTotalVotes}</span>
+                      <button
+                        onClick={() => handleCommentVote(comment._id, "downvote")}
+                        className={`p-1 rounded-full ${
+                          comment.votes?.find(
+                            (v) => v.userId === user?._id && v.type === "downvote"
+                          )
+                            ? "text-orange-500"
+                            : "text-gray-400 hover:text-orange-500"
+                        }`}
+                      >
+                        <FaArrowDown />
+                      </button>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        {/* <img
+                          src={comment.authorEmail}
+                          alt={comment.authorName}
+                          className="w-5 h-5 rounded-full"
+                        /> */}
+                        <span className="font-medium text-sm">{comment.authorEmail}</span>
+                        <span className="text-gray-500 text-sm">
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-gray-700">{comment.content}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+            
+            {/* Comment Form */}
+            <form onSubmit={handleCommentSubmit} className="mb-8">
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Write a comment..."
+                className="w-full p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent min-h-[100px]"
+              />
+              <button
+                type="submit"
+                className="mt-2 px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                disabled={commentMutation.isLoading}
+              >
+                {commentMutation.isLoading ? "Posting..." : "Post Comment"}
+              </button>
+            </form>
           </motion.div>
 
           <motion.footer

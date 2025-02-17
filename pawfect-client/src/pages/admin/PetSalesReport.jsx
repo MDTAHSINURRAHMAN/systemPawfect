@@ -31,35 +31,35 @@ const PetSalesReport = () => {
   }
 
   return (
-    <div className="p-8 bg-gray-100 text-white min-h-screen">
+    <div className="p-8 min-h-screen">
       <h2 className="text-4xl font-bold text-orange-500 mb-8 text-center">Pet Sales Report</h2>
       
       <div className="mb-6 flex justify-center">
         <input
           type="text"
           placeholder="Search by pet or customer name..."
-          className="input input-bordered bg-gray-800 text-white w-full max-w-md focus:border-orange-500"
+          className="input input-bordered w-full max-w-md focus:border-orange-500"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      <div className="bg-gray-800 rounded-xl p-6 shadow-xl">
+      <div className="bg-white rounded-xl p-6 shadow-xl">
         <div className="overflow-x-auto">
           <table className="table w-full">
             <thead>
-              <tr className="bg-gray-700">
-                <th className="text-orange-400">Date</th>
-                <th className="text-orange-400">Transaction ID</th>
-                <th className="text-orange-400">Pet Name</th>
-                <th className="text-orange-400">Customer Name</th>
-                <th className="text-orange-400">Amount</th>
-                <th className="text-orange-400">Status</th>
+              <tr>
+                <th className="text-orange-500">Date</th>
+                <th className="text-orange-500">Transaction ID</th>
+                <th className="text-orange-500">Pet Name</th>
+                <th className="text-orange-500">Customer Name</th>
+                <th className="text-orange-500">Amount</th>
+                <th className="text-orange-500">Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredPayments.map((payment) => (
-                <tr key={payment.tran_id} className="hover:bg-gray-700 transition-colors">
+                <tr key={payment.tran_id} className="hover:bg-gray-50 transition-colors">
                   <td>{new Date(payment.createdAt).toLocaleDateString()}</td>
                   <td>{payment.tran_id}</td>
                   <td>{payment.petName}</td>
@@ -83,13 +83,13 @@ const PetSalesReport = () => {
         </div>
       </div>
 
-      <div className="mt-8 space-y-4 bg-gray-800 p-6 rounded-xl shadow-xl">
+      <div className="mt-8 space-y-4 bg-white p-6 rounded-xl shadow-xl">
         <div className="flex justify-between items-center">
-          <p className="text-xl text-gray-300">Total Completed Sales:</p>
+          <p className="text-xl">Total Completed Sales:</p>
           <p className="text-2xl font-bold text-orange-500">{totalCompletedCount}</p>
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-xl text-gray-300">Total Earnings:</p>
+          <p className="text-xl">Total Earnings:</p>
           <p className="text-2xl font-bold text-orange-500">${totalEarnings.toFixed(2)}</p>
         </div>
       </div>

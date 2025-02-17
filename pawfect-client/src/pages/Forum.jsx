@@ -3,14 +3,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
-import { FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaPlus, FaTimes } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 
 const Forum = () => {
   const { user } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const postsPerPage = 6;
   const queryClient = useQueryClient();
 
@@ -25,6 +28,41 @@ const Forum = () => {
       return response.data;
     },
   });
+
+  const createForumMutation = useMutation({
+    mutationFn: async (forumData) => {
+      const response = await axios.post("http://localhost:5000/forums", forumData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["forums"]);
+      toast.success("Forum post created successfully!");
+      setShowModal(false);
+      setTitle("");
+      setContent("");
+    },
+    onError: () => {
+      toast.error("Failed to create forum post. Please try again.");
+    }
+  });
+
+  const handleCreateForum = (e) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    createForumMutation.mutate({
+      title,
+      content,
+      authorId: user?._id,
+      authorName: user?.name,
+      authorEmail: user?.email,
+      createdAt: new Date(),
+      votes: [],
+      comments: [],
+    });
+  };
 
   const voteMutation = useMutation({
     mutationFn: async ({ forumId, voteType }) => {
@@ -117,23 +155,91 @@ const Forum = () => {
         <motion.h1
           initial={{ y: -20 }}
           animate={{ y: 0 }}
-          className="text-3xl md:text-4xl font-bold text-gray-800"
+          className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-black to-orange-500 bg-clip-text text-transparent"
         >
           Pet Community Forums
         </motion.h1>
 
-        {/* {user && (
-          <Link
-            to="/dashboard/forums"
+        {user && (
+          <button
+            onClick={() => setShowModal(true)}
             className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors gap-2"
           >
             <FaPlus /> Create Post
-          </Link>
-        )} */}
+          </button>
+        )}
       </div>
 
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-xl p-6 w-full max-w-2xl"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Create New Forum Post</h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <FaTimes className="w-6 h-6" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateForum} className="space-y-4">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    placeholder="Enter post title"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">Content</label>
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent h-40"
+                    placeholder="Enter post content"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                    disabled={createForumMutation.isLoading}
+                  >
+                    {createForumMutation.isLoading ? "Creating..." : "Create Post"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {currentPosts.map((forum, index) => {
+        {currentPosts.slice(0, 3).map((forum, index) => {
           const upvotes = forum.votes?.filter((v) => v.type === "upvote").length || 0;
           const downvotes = forum.votes?.filter((v) => v.type === "downvote").length || 0;
           const totalVotes = upvotes - downvotes;

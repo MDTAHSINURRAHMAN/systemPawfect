@@ -24,6 +24,8 @@ import {
 } from "react-icons/fa";
 import FAQuestions from "./FAQuestions";
 import Forum from "./Forum";
+import FeedbackHome from "./FeedbackHome";
+import VolunteerHome from "./VolunteerHome";
 const Home = () => {
   const [showModal, setShowModal] = useState(true);
   const [currentPetIndex, setCurrentPetIndex] = useState(0);
@@ -216,10 +218,10 @@ const Home = () => {
                       className="w-full h-[300px] rounded-2xl shadow-lg"
                     ></div>
 
-                    <InfoCard
+                    {/* <InfoCard
                       icon={<FaMapMarkerAlt />}
                       text={`${lostPets[currentPetIndex].lastSeenLocation}`}
-                    />
+                    /> */}
                     <InfoCard
                       icon={<FaUserAlt />}
                       text={lostPets[currentPetIndex].ownerEmail}
@@ -270,6 +272,8 @@ const Home = () => {
       <About />
       <WhatWeOffer />
       <TrainingPrograms />
+      <VolunteerHome />
+      <FeedbackHome />
       <Forum />
       <FAQuestions />
       <Newsletter />

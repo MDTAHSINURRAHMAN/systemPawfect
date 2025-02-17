@@ -147,8 +147,8 @@ const LostPet = () => {
                             onClick={() => handleStatusUpdate(pet)}
                             className={`px-6 py-2 text-white rounded-xl shadow-md ${
                               pet.status === "lost" 
-                                ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700" 
-                                : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                                ? "bg-gradient-to-r from-black to-orange-500 hover:from-orange-600 hover:to-orange-700" 
+                                : "bg-gradient-to-r from-black to-green-500 hover:from-green-600 hover:to-black"
                             }`}
                           >
                             Mark as {pet.status === "lost" ? "Found" : "Lost"}

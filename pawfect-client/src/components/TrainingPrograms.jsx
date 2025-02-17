@@ -59,7 +59,7 @@ const TrainingPrograms = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="zen-dots text-4xl md:text-5xl lg:text-6xl text-[#FF640D] font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl text-[#FF640D] font-bold mb-4 tracking-widest">
             MEET OUR EXPERT VETS
           </h2>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">

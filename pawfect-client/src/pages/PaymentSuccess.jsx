@@ -8,7 +8,7 @@ const PaymentSuccess = () => {
       <Helmet>
         <title>Pawfect | Payment Success</title>
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-28">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -33,7 +33,7 @@ const PaymentSuccess = () => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent"
+              className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-black to-orange-500 bg-clip-text text-transparent"
             >
               Payment Successful!
             </motion.h1>
@@ -60,18 +60,18 @@ const PaymentSuccess = () => {
               transition={{ delay: 0.5 }}
               className="bg-blue-50 rounded-2xl p-6 mb-8"
             >
-              <h2 className="text-2xl font-semibold text-blue-600 mb-4">What's Next?</h2>
+              <h2 className="text-2xl font-semibold text-black mb-4">What's Next?</h2>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-black rounded-full mr-3"></span>
                   Check your email for booking confirmation
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-black rounded-full mr-3"></span>
                   Your volunteer will contact you within 24 hours
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-black rounded-full mr-3"></span>
                   Get ready for your pet's first training session!
                 </li>
               </ul>
@@ -86,7 +86,7 @@ const PaymentSuccess = () => {
             >
               <Link
                 to="/"
-                className="inline-block px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
+                className="inline-block px-8 py-3 bg-black text-white rounded-full hover:bg-orange-600 transition duration-300"
               >
                 Return Home
               </Link>

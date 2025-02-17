@@ -96,7 +96,7 @@ const FAQ = () => {
           />
           <button 
             type="submit" 
-            className="btn btn-primary"
+            className="btn btn-outline text-orange-500"
             disabled={addFaqMutation.isLoading}
           >
             {addFaqMutation.isLoading ? 'Adding...' : 'Add FAQ'}
@@ -150,7 +150,7 @@ const FAQ = () => {
                     onClick={() => setEditingId(faq._id)}
                     className="btn btn-sm btn-ghost"
                   >
-                    <FaEdit className="text-blue-500" />
+                    <FaEdit className="text-orange-500" />
                   </button>
                   <button
                     onClick={() => deleteFaqMutation.mutate(faq._id)}

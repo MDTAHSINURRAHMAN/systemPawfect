@@ -78,6 +78,7 @@ async function run() {
     const vetCollection = db.collection("vets");
     const appointmentCollection = db.collection("appointments");
     const faqCollection = db.collection("faqs");
+    const commentCollection = db.collection("comments");
 
     // Create user API endpoint
     app.post("/users", async (req, res) => {
@@ -1897,6 +1898,35 @@ async function run() {
       const { email } = req.params;
       const reviews = await reviewCollection.find({ userEmail: email }).toArray();
       res.json(reviews);
+    });
+
+    // get all forums
+    app.get("/forums", async (req, res) => {
+      const forums = await forumCollection.find().toArray();
+      res.json(forums);
+    });
+
+    // forums/:id/comments
+    app.get("/forums/:id/comments", async (req, res) => {
+      const { id } = req.params;
+      const comments = await commentCollection.find({ forumId: id }).toArray();
+      res.json(comments);
+    });
+
+    // forums/:id/comments post
+    app.post("/forums/:id/comments", async (req, res) => {
+      const { id } = req.params;
+      const comment = req.body;
+      const result = await commentCollection.insertOne(comment);
+      res.json(result);
+    });
+
+    // forums/:id/comments/:commentId/vote
+    app.post("/forums/:id/comments/:commentId/vote", async (req, res) => {
+      const { id, commentId } = req.params;
+      const { voteType } = req.body;
+      const comment = await commentCollection.findOne({ _id: new ObjectId(commentId) });
+      res.json(comment);
     });
     
     

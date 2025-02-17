@@ -189,14 +189,14 @@ const Appointments = () => {
                   {appointment.status === "confirmed" && (
                     <button
                       onClick={() => initiateCall(appointment)}
-                      className="btn btn-primary btn-sm"
+                      className="btn btn-outline text-orange-500 btn-sm"
                     >
                       Make Call
                     </button>
                   )}
                   <Link
                     to={`/dashboard/write-prescription/${appointment._id}`}
-                    className="btn btn-secondary btn-sm"
+                    className="btn btn-outline text-orange-500 btn-sm"
                   >
                     Generate Prescription
                   </Link>

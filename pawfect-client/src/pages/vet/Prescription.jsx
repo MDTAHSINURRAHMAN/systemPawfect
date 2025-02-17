@@ -233,7 +233,7 @@ const Prescription = () => {
           <div className="flex gap-4">
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-outline text-orange-500"
               disabled={prescriptionMutation.isLoading}
             >
               {prescriptionMutation.isLoading
