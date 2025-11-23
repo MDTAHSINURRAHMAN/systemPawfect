@@ -1,165 +1,65 @@
-### Client-Side README
-
-# Pawfect — Client
+**Pawfect — Client**
 
 A full-featured React client for a pet services marketplace (adoption, trainers, vets, forum, payments).
 
-✨ This README is generated from the repository files and dependencies — it reflects the app code, routes, and integrations present in the project.
-
-**Repository notes:** the project folder is named `pawfect-client` while `package.json` lists the package name as `fitness-tracker-client` (both names are used in the source tree).
+✨ This README reflects the app code, routes, and integrations present in the `pawfect-client` folder.
 
 **Overview**
 
-Pawfect is a client-side React application that powers a multi-faceted pet services platform: adoption listings, trainer booking, vet appointments, community forums, product sales, and payment flows. It uses Firebase for authentication, Stripe for payments, React Router for navigation, and React Query for remote data fetching and caching. The app emphasizes modular pages (member, trainer, vet, admin) and real-time features (chat/video calls) visible in the source tree.
+Pawfect is a client-side React application that powers adoption listings, trainer booking, vet appointments, community forums, product sales, and payment flows. It uses Firebase for authentication, Stripe for payments, React Router for navigation, and React Query for remote data fetching and caching.
 
-🎯 Key Features
+**Key Features**
 
-- **Multi-role UI**: Separate pages and routes for general users, trainers, vets, and administrators (see `src/pages/*` and `src/pages/admin/*`).
-- **Authentication**: Firebase authentication wiring present in `src/firebase/firebaseConfig.js` and `src/context/AuthContext.jsx`.
-- **Payments**: Stripe client libraries are included (`@stripe/react-stripe-js`, `@stripe/stripe-js`) with dedicated payment pages under `src/pages/payment/` and `src/payment/`.
-- **Bookings & Scheduling**: Trainer booking and slot management pages (`TrainerBooking.jsx`, `ManageSlot.jsx`, `TrainerBookingPage.jsx`, `AddNewSlot.jsx`).
-- **Adoption & Sales**: Adoption flow and product checkout components (`AdoptPet.jsx`, `AdoptPetDetails.jsx`, `ProductPayment.jsx`, `PetSalesReport.jsx`).
-- **Community & Chat**: Forum, forum details, and chat pages suggesting Socket.IO and realtime interactions (`Forum.jsx`, `ForumDetails.jsx`, `socket.io-client` dependency and `ChatWithMember.jsx`).
-- **Media & Animations**: Lottie animations and Framer Motion for polished UI (`@lottiefiles/react-lottie-player`, `lottie-react`, `framer-motion`).
+- **Multi-role UI:** Separate pages and routes for users, trainers, vets, and administrators (`src/pages/*`, `src/pages/admin/*`).
+- **Authentication:** Firebase auth wiring in `src/firebase/firebaseConfig.js` and `src/context/AuthContext.jsx`.
+- **Payments:** Stripe client libraries included; payment pages under `src/pages/payment/`.
+- **Bookings & Scheduling:** Trainer booking + slot management pages (e.g., `TrainerBooking.jsx`, `ManageSlot.jsx`).
+- **Adoption & Sales:** Adoption flow and product checkout components (`AdoptPet.jsx`, `AdoptPetDetails.jsx`, `ProductPayment.jsx`).
+- **Community & Chat:** Forum, forum details, and chat pages; `socket.io-client` is present for real-time features.
+- **Animations & UI:** Lottie and Framer Motion for polished UI.
 
-🛠️ Tech Stack & Tools
+**Tech Stack & Tools**
 
-- **Languages:** JavaScript (ES Module), JSX
-- **Frameworks & Libraries:**
-  - React ^18.3.1
-  - React Router DOM ^7.1.1
-  - @tanstack/react-query ^5.64.2 (data fetching + caching)
-  - Firebase ^11.1.0 (auth)
-  - Stripe client libs: `@stripe/react-stripe-js` ^3.1.1, `@stripe/stripe-js` ^5.5.0
-  - Charting & UI libs: `recharts`, `react-chartjs-2`, `react-slick`, `daisyui`
-  - Animations: `framer-motion`, `lottie-react`
-  - Real-time comms: `socket.io-client`
-- **Infrastructure / Build:**
-  - Vite ^6.0.5 (dev server + bundling)
-  - Tailwind CSS ^3.4.17 + DaisyUI for component utilities
-- **Dev Tools:**
-  - ESLint (`eslint`, `@eslint/js`, plugins), PostCSS, Autoprefixer
-  - `react-query` devtools available as dependency
+- Languages: JavaScript/JSX
+- Frameworks: React (Vite)
+- Data & Auth: Firebase (auth), React Query for remote server state
+- Payments: Stripe client libs (`@stripe/react-stripe-js`, `@stripe/stripe-js`)
+- Styling: Tailwind CSS + DaisyUI
+- Real-time: `socket.io-client`
+- Dev tooling: Vite, ESLint, PostCSS, Autoprefixer
 
-Versions taken from `package.json` dependencies and devDependencies in the repository.
+**Project Structure (simplified)**
 
-📂 Project Structure (simplified, depth 2)
-```
+`./`
 
-./
-├─ package.json # npm scripts & dependencies
-├─ vite.config.js # Vite configuration
-├─ tailwind.config.js # TailwindCSS + DaisyUI
-├─ src/
-│ ├─ main.jsx # App entry: React Query, AuthProvider, RouterProvider
-│ ├─ index.css # Tailwind entry styles
-│ ├─ firebase/
-│ │ └─ firebaseConfig.js # Firebase initialization (uses VITE\_ env vars)
-│ ├─ context/
-│ │ └─ AuthContext.jsx # Authentication context/provider
-│ ├─ router/
-│ │ └─ routes.jsx # App routes and private/admin routes
-│ ├─ pages/ # Feature pages (adopt, trainers, vets, admin, payment, forum)
-│ └─ components/ # Reusable UI components (Banner, Team, Testimonials...)
-└─ public/ # Static assets and icons
+- `package.json` — npm scripts & dependencies
+- `vite.config.js` — Vite config
+- `tailwind.config.js` — Tailwind + DaisyUI config
+- `src/`
+  - `main.jsx` — app entry (React Query, AuthProvider, Router)
+  - `firebase/firebaseConfig.js` — Firebase initialization (reads VITE\_ env vars)
+  - `context/AuthContext.jsx` — auth provider
+  - `router/routes.jsx` — application routes and private/admin wrappers
+  - `pages/` — route-level pages (adopt, trainers, vets, admin, payment, forum)
+  - `components/` — reusable UI components
+- `public/` — static assets
 
-````
+**Prerequisites**
 
-Brief folder notes:
-- `src/pages/` — Contains all route-level pages: user-facing flows, admin area, trainer and vet sections.
-- `src/context/` — App-wide providers (authentication, etc.).
-- `src/firebase/` — Firebase app + `auth` export; the app reads credentials from `import.meta.env` variables.
-- `src/router/` — Central router and private route wrappers used by `main.jsx`.
+- Node.js and npm (or Yarn / pnpm)
 
-🚀 Getting Started (local)
+**Install**
 
-Prerequisites
-
-- Node.js and npm (or Yarn / pnpm) installed on your machine.
-# Pawfect — Client
-
-A full-featured React client for a pet services marketplace (adoption, trainers, vets, forum, and payments).
-
-✨ This README reflects the app code, routes, and integrations present in the repository.
-
-**Overview**
-
-Pawfect is a client-side React application powering a multi-faceted pet services platform: adoption listings, trainer booking, vet appointments, community forums, product sales, and payment flows. It uses Firebase for authentication, Stripe for payments, React Router for navigation, and React Query for remote data fetching and caching. The app emphasizes modular pages (member, trainer, vet, admin) and includes chat/video features that rely on real-time services.
-
-🎯 Key Features
-
-- **Multi-role UI**: Separate pages and routes for general users, trainers, vets, and administrators (see `src/pages/*` and `src/pages/admin/*`).
-- **Authentication**: Firebase authentication wiring present in `src/firebase/firebaseConfig.js` and `src/context/AuthContext.jsx`.
-- **Payments**: Stripe client libraries are included (`@stripe/react-stripe-js`, `@stripe/stripe-js`) with dedicated payment pages under `src/pages/payment/` and `src/payment/`.
-- **Bookings & Scheduling**: Trainer booking and slot management pages (`TrainerBooking.jsx`, `ManageSlot.jsx`, `TrainerBookingPage.jsx`, `AddNewSlot.jsx`).
-- **Adoption & Sales**: Adoption flow and product checkout components (`AdoptPet.jsx`, `AdoptPetDetails.jsx`, `ProductPayment.jsx`, `PetSalesReport.jsx`).
-- **Community & Chat**: Forum, forum details, and chat pages suggesting Socket.IO and realtime interactions (`Forum.jsx`, `ForumDetails.jsx`, `socket.io-client` dependency and `ChatWithMember.jsx`).
-- **Media & Animations**: Lottie animations and Framer Motion for polished UI (`@lottiefiles/react-lottie-player`, `lottie-react`, `framer-motion`).
-
-🛠️ Tech Stack & Tools
-
-- **Languages:** JavaScript (ES Module), JSX
-- **Frameworks & Libraries:**
-  - React ^18.3.1
-  - React Router DOM ^7.1.1
-  - @tanstack/react-query ^5.64.2 (data fetching + caching)
-  - Firebase ^11.1.0 (auth)
-  - Stripe client libs: `@stripe/react-stripe-js` ^3.1.1, `@stripe/stripe-js` ^5.5.0
-  - Charting & UI libs: `recharts`, `react-chartjs-2`, `react-slick`, `daisyui`
-  - Animations: `framer-motion`, `lottie-react`
-  - Real-time comms: `socket.io-client`
-- **Infrastructure / Build:**
-  - Vite ^6.0.5 (dev server + bundling)
-  - Tailwind CSS ^3.4.17 + DaisyUI for component utilities
-- **Dev Tools:**
-  - ESLint (`eslint`, `@eslint/js`, plugins), PostCSS, Autoprefixer
-  - `react-query` devtools available as dependency
-
-Versions taken from `package.json` dependencies and devDependencies in the repository.
-
-📂 Project Structure (simplified, depth 2)
-
-```
-./
-├─ package.json                # npm scripts & dependencies
-├─ vite.config.js              # Vite configuration
-├─ tailwind.config.js          # TailwindCSS + DaisyUI
-├─ src/
-│  ├─ main.jsx                 # App entry: React Query, AuthProvider, RouterProvider
-│  ├─ index.css                # Tailwind entry styles
-│  ├─ firebase/
-│  │  └─ firebaseConfig.js     # Firebase initialization (uses VITE_ env vars)
-│  ├─ context/
-│  │  └─ AuthContext.jsx       # Authentication context/provider
-│  ├─ router/
-│  │  └─ routes.jsx            # App routes and private/admin routes
-│  ├─ pages/                   # Feature pages (adopt, trainers, vets, admin, payment, forum)
-│  └─ components/              # Reusable UI components (Banner, Team, Testimonials...)
-└─ public/                     # Static assets and icons
-```
-
-Brief folder notes:
-- `src/pages/` — Contains all route-level pages: user-facing flows, admin area, trainer and vet sections.
-- `src/context/` — App-wide providers (authentication, etc.).
-- `src/firebase/` — Firebase app + `auth` export; the app reads credentials from `import.meta.env` variables.
-- `src/router/` — Central router and private route wrappers used by `main.jsx`.
-
-🚀 Getting Started (local)
-
-Prerequisites
-
-- Node.js and npm (or Yarn / pnpm) installed on your machine.
-
-Install
+Open PowerShell and run:
 
 ```powershell
 cd d:/systemProject/pawfect-client
 npm install
 ```
 
-Environment variables
+**Environment variables**
 
-The app uses Vite environment variables for Firebase. Create a `.env` (or use your system environment) with the following keys:
+Create a `.env` file at the project root or set system env vars. The app expects the following Vite vars (example names used in code):
 
 - `VITE_apiKey`
 - `VITE_authDomain`
@@ -167,30 +67,31 @@ The app uses Vite environment variables for Firebase. Create a `.env` (or use yo
 - `VITE_storageBucket`
 - `VITE_messagingSenderId`
 - `VITE_appId`
+- (Optional) `VITE_STRIPE_PUBLISHABLE_KEY` — if your Stripe client initialization uses an env var
 
-If your Stripe client key needs to be kept in environment variables for client-side initialization, follow the code patterns in `src/pages/payment/` and set an appropriate `VITE_STRIPE_PUBLISHABLE_KEY` if required by your integration.
+Ensure these map to values for your Firebase project and client-side Stripe key.
 
-Run (development)
+**Run (development)**
 
 ```powershell
 npm run dev
 ```
 
-Build (production)
+**Build (production)**
 
 ```powershell
 npm run build
 npm run preview
 ```
 
-💡 Design Decisions & Architecture Notes
+**Design & Architecture Notes**
 
-The client adopts a modular page-by-page structure that maps one-to-one with routes defined in `src/router/routes.jsx`. This layout keeps UI concerns localized: pages handle data orchestration while `src/components/` provides shared visual primitives.
+- Routes are defined in `src/router/routes.jsx` and map one-to-one with pages.
+- React Query is used to centralize server-state (bookings, forum threads, etc.).
+- Real-time features (chat/video) require the server-side Socket.IO and signaling servers to be functional.
+- Stripe client libs are present, but server-side secret-key handling and webhooks must be implemented in the backend (see `pawfect-server`).
 
-React Query is used for remote data fetching and caching which simplifies server-state management across pages (booking lists, trainer availability, forum threads). This complements Firebase for authentication and lightweight real-time features.
+**Next Steps**
 
-Tailwind CSS + DaisyUI were chosen for rapid, utility-driven styling and pre-built components — enabling a consistent design system without heavy custom CSS. Vite provides a fast dev server and modern ESM bundling that shortens feedback loops during development.
-
-Stripe client libraries are included to handle secure, PCI-compliant payment flows on the frontend; server-side payment handling (secret keys, webhooks) should be implemented in a backend service and is not present in this repo.
-
-The presence of `socket.io-client`, chat components, and `VideoCall.jsx` indicate real-time and peer-to-peer communication features; these require corresponding server components (Socket.IO server, signaling server) to be fully functional.
+- Start the server (`pawfect-server`) and provide the API base URL used by the client.
+- I can run `npm install` here or commit these README files if you want.
