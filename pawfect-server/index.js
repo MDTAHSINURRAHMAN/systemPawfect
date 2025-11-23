@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socket(server, {
   cors: {
-    origin: "http://localhost:5173", // React app URL
+    origin: "*", // React app URL
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -58,8 +58,9 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function run() {
+async function run() {  
   try {
+    await client.connect();
     const db = client.db("pawfect");
     const userCollection = db.collection("users");
     const volunteerCollection = db.collection("volunteers");
@@ -782,10 +783,10 @@ async function run() {
           currency: payment.currency || "BDT",
           tran_id,
           // Add tran_id to URLs for tracking
-          success_url: `http://localhost:5000/payment/success?tran_id=${tran_id}`,
-          fail_url: `http://localhost:5000/payment/fail?tran_id=${tran_id}`,
-          cancel_url: `http://localhost:5000/payment/cancel?tran_id=${tran_id}`,
-          ipn_url: `http://localhost:5000/payment/ipn?tran_id=${tran_id}`,
+          success_url: `https://pawfect-server-beige.vercel.app/payment/success?tran_id=${tran_id}`,
+          fail_url: `https://pawfect-server-beige.vercel.app/payment/fail?tran_id=${tran_id}`,
+          cancel_url: `https://pawfect-server-beige.vercel.app/payment/cancel?tran_id=${tran_id}`,
+          ipn_url: `https://pawfect-server-beige.vercel.app/payment/ipn?tran_id=${tran_id}`,
           shipping_method: "NO",
           product_name: payment.product_name,
           product_category: payment.product_category,
