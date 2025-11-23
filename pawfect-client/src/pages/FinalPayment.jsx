@@ -39,7 +39,7 @@ const FinalPayment = () => {
       console.log("Sending payment details to server:", paymentDetails); // Debug log
 
       const response = await axios.post(
-        "http://localhost:5000/payments",
+        "https://pawfect-server-beige.vercel.app/payments",
         paymentDetails
       );
 

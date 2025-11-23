@@ -24,14 +24,14 @@ const Forum = () => {
   } = useQuery({
     queryKey: ["forums"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/forums");
+      const response = await axios.get("https://pawfect-server-beige.vercel.app/forums");
       return response.data;
     },
   });
 
   const createForumMutation = useMutation({
     mutationFn: async (forumData) => {
-      const response = await axios.post("http://localhost:5000/forums", forumData);
+      const response = await axios.post("https://pawfect-server-beige.vercel.app/forums", forumData);
       return response.data;
     },
     onSuccess: () => {
@@ -67,7 +67,7 @@ const Forum = () => {
   const voteMutation = useMutation({
     mutationFn: async ({ forumId, voteType }) => {
       const response = await axios.post(
-        `http://localhost:5000/forums/${forumId}/vote`,
+        `https://pawfect-server-beige.vercel.app/forums/${forumId}/vote`,
         {
           userId: user?._id,
           voteType,

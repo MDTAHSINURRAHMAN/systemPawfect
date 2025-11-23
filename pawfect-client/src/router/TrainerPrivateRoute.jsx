@@ -13,7 +13,7 @@ const TrainerPrivateRoute = ({ children }) => {
     queryFn: async () => {
       if (!user?.email) return null;
       const { data } = await axios.get(
-        `http://localhost:5000/users/${user.email}`
+        `https://pawfect-server-beige.vercel.app/users/${user.email}`
       );
       return data;
     },

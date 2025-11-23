@@ -15,14 +15,14 @@ const AdminAllTrainers = () => {
   } = useQuery({
     queryKey: ["volunteers"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/volunteers");
+      const { data } = await axios.get("https://pawfect-server-beige.vercel.app/volunteers");
       return data;
     },
   });
 
   const deleteVolunteerMutation = useMutation({
     mutationFn: async (volunteerId) => {
-      await axios.delete(`http://localhost:5000/volunteers/${volunteerId}`);
+      await axios.delete(`https://pawfect-server-beige.vercel.app/volunteers/${volunteerId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["volunteers"]);

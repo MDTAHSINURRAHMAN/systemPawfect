@@ -29,7 +29,7 @@ const Navbar = () => {
       if (!user?.email) return;
       
       try {
-        const response = await fetch(`http://localhost:5000/users/${user.email}`);
+        const response = await fetch(`https://pawfect-server-beige.vercel.app/users/${user.email}`);
         if (response.ok) {
           const data = await response.json();
           setUserData({
@@ -208,11 +208,11 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center gap-6">
               {user ? (
                 <div className="flex items-center gap-4">
-                  <img
+                  {/* <img
                     className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-200 ring-offset-2"
-                    src={userData?.photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg"}
+                    src={userData?.photoURL}
                     alt={userData?.name}
-                  />
+                  /> */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

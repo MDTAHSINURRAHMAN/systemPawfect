@@ -21,7 +21,7 @@ const AdminLogin = () => {
 
       // Then verify admin role in MongoDB
       const { data: userData } = await axios.get(
-        `http://localhost:5000/users/${email}`
+        `https://pawfect-server-beige.vercel.app/users/${email}`
       );
 
       console.log(userData);

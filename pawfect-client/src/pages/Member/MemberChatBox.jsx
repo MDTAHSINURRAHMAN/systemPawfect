@@ -17,7 +17,7 @@ import { toast } from "react-hot-toast";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyC5s89_KsT2NG6DawsfH_Ju__2Yp4oKh8I";
 
-const socket = io("http://localhost:5000", {
+const socket = io("https://pawfect-server-beige.vercel.app/", {
   path: "/socket.io/",
   transports: ["websocket", "polling"],
 });
@@ -34,7 +34,7 @@ const MemberChatBox = () => {
     queryKey: ["user", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/users/${user?.email}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/users/${user?.email}`);
       return res.data;
     },
   });
@@ -43,7 +43,7 @@ const MemberChatBox = () => {
     queryKey: ["volunteer", id],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/chat-with-volunteer/${id}`
+        `https://pawfect-server-beige.vercel.app/chat-with-volunteer/${id}`
       );
       return res.data[0];
     },
@@ -54,7 +54,7 @@ const MemberChatBox = () => {
     enabled: !!user?.email && !!id,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/messages/${user?.email}/${id}`
+        `https://pawfect-server-beige.vercel.app/messages/${user?.email}/${id}`
       );
       return res.data;
     },

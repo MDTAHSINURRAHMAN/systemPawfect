@@ -20,7 +20,7 @@ const TrainerDetails = () => {
     queryFn: async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/volunteers/${id}`
+          `https://pawfect-server-beige.vercel.app/volunteers/${id}`
         );
         return response.data.data;
       } catch (error) {

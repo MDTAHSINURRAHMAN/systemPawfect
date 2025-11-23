@@ -14,7 +14,7 @@ const ManageSlot = () => {
   const { data: trainerSlots, isLoading } = useQuery({
     queryKey: ["trainerSlots", user?.email],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/all-slots`);
+      const response = await axios.get(`https://pawfect-server-beige.vercel.app/all-slots`);
       return response.data;
     },
   });
@@ -33,7 +33,7 @@ const ManageSlot = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/slots/${slotToDelete}`);
+      await axios.delete(`https://pawfect-server-beige.vercel.app/slots/${slotToDelete}`);
       queryClient.invalidateQueries(["trainerSlots"]);
       setSlotToDelete(null);
     } catch (error) {

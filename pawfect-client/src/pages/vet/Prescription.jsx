@@ -21,7 +21,7 @@ const Prescription = () => {
     queryKey: ["appointment", appointmentId],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/appointments/${appointmentId}`
+        `https://pawfect-server-beige.vercel.app/appointments/${appointmentId}`
       );
       return res.data;
     },
@@ -30,7 +30,7 @@ const Prescription = () => {
   const prescriptionMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axios.post(
-        `http://localhost:5000/prescriptions/${appointmentId}`,
+        `https://pawfect-server-beige.vercel.app/prescriptions/${appointmentId}`,
         data
       );
       return response.data;
@@ -125,7 +125,7 @@ const Prescription = () => {
 
       // Save PDF data to server
       await axios.patch(
-        `http://localhost:5000/prescriptions/${appointmentId}/pdf`,
+        `https://pawfect-server-beige.vercel.app/prescriptions/${appointmentId}/pdf`,
         {
           pdfData: pdfData,
         }

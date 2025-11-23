@@ -7,7 +7,7 @@ const AllPets = () => {
   const { data: pets = [], isLoading } = useQuery({
     queryKey: ["pets"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/pets");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/pets");
       return res.data;
     }
   });

@@ -9,7 +9,7 @@ const Testimonials = () => {
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["reviews"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/reviews");
+      const { data } = await axios.get("https://pawfect-server-beige.vercel.app/reviews");
       return data;
     },
   });

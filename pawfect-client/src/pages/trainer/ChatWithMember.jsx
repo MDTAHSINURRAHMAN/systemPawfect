@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { FaLocationArrow, FaPaw, FaArrowDown } from "react-icons/fa";
 
 // Configure socket with path option
-const socket = io("http://localhost:5000", {
+const socket = io("https://pawfect-server-beige.vercel.app", {
   path: "/socket.io/",
   transports: ["websocket", "polling"],
 });
@@ -27,7 +27,7 @@ const ChatWithMember = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/volunteer-by-email/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/volunteer-by-email/${user?.email}`
       );
       return res.data;
     },
@@ -38,7 +38,7 @@ const ChatWithMember = () => {
     queryKey: ["member", id],
     enabled: !!id,
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/users/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/users/${id}`);
       return res.data;
     },
   });
@@ -49,7 +49,7 @@ const ChatWithMember = () => {
     enabled: !!volunteer._id && !!id,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/messages/${id}/${volunteer._id}`
+        `https://pawfect-server-beige.vercel.app/messages/${id}/${volunteer._id}`
       );
       return res.data;
     },
@@ -68,7 +68,7 @@ const ChatWithMember = () => {
     enabled: !!volunteer._id && !!id,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/locations/${id}/${volunteer._id}`
+        `https://pawfect-server-beige.vercel.app/locations/${id}/${volunteer._id}`
       );
       return res.data;
     },
@@ -116,7 +116,7 @@ const ChatWithMember = () => {
     socket.emit("send_message", { message: messageData, room });
 
     try {
-      await axios.post("http://localhost:5000/messages", messageData);
+      await axios.post("https://pawfect-server-beige.vercel.app/messages", messageData);
       setMessage("");
       // Refetch messages after sending
       refetchMessages();

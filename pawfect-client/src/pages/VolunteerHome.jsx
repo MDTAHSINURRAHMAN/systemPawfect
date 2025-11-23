@@ -10,7 +10,7 @@ const VolunteerHome = () => {
   const { data: volunteers = [], isLoading } = useQuery({
     queryKey: ["volunteers"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/volunteers");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/volunteers");
       return res.data.slice(0, 3); // Get only first 3 volunteers
     },
   });

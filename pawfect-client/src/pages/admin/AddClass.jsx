@@ -24,7 +24,7 @@ const AddClass = () => {
     mutationFn: async (productData) => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/products",
+          "https://pawfect-server-beige.vercel.app/products",
           productData
         );
         return response.data;

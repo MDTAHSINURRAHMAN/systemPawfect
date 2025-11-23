@@ -12,7 +12,7 @@ const MyReviews = () => {
     queryKey: ["reviews", user?.email],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/reviews/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/reviews/${user?.email}`
       );
       return response.data;
     },

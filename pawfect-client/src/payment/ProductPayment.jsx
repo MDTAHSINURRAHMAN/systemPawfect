@@ -15,7 +15,7 @@ const ProductPayment = () => {
   const { data: product } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/products/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/products/${id}`);
       return res.data;
     },
   });
@@ -40,7 +40,7 @@ const ProductPayment = () => {
   const initPaymentMutation = useMutation({
     mutationFn: async (paymentData) => {
       const response = await axios.post(
-        "http://localhost:5000/ssl-payment",
+        "https://pawfect-server-beige.vercel.app/ssl-payment",
         paymentData
       );
       return response.data;

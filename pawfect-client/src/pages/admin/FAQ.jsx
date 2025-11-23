@@ -14,7 +14,7 @@ const FAQ = () => {
   const { data: faqs, isLoading } = useQuery({
     queryKey: ['faqs'],
     queryFn: async () => {
-      const { data } = await axios.get('http://localhost:5000/faqs');
+      const { data } = await axios.get('https://pawfect-server-beige.vercel.app/faqs');
       return data;
     }
   });
@@ -22,7 +22,7 @@ const FAQ = () => {
   // Add FAQ
   const addFaqMutation = useMutation({
     mutationFn: async (newFaq) => {
-      const { data } = await axios.post('http://localhost:5000/faqs', newFaq);
+      const { data } = await axios.post('https://pawfect-server-beige.vercel.app/faqs', newFaq);
       return data;
     },
     onSuccess: () => {
@@ -35,7 +35,7 @@ const FAQ = () => {
   // Update FAQ
   const updateFaqMutation = useMutation({
     mutationFn: async ({ id, updatedFaq }) => {
-      const { data } = await axios.patch(`http://localhost:5000/faqs/${id}`, updatedFaq);
+      const { data } = await axios.patch(`https://pawfect-server-beige.vercel.app/faqs/${id}`, updatedFaq);
       return data;
     },
     onSuccess: () => {
@@ -47,7 +47,7 @@ const FAQ = () => {
   // Delete FAQ
   const deleteFaqMutation = useMutation({
     mutationFn: async (id) => {
-      await axios.delete(`http://localhost:5000/faqs/${id}`);
+      await axios.delete(`https://pawfect-server-beige.vercel.app/faqs/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['faqs']);

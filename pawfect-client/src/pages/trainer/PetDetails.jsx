@@ -15,7 +15,7 @@ const PetDetails = () => {
   const { data: userData } = useQuery({
     queryKey: ["user", user?.email],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/users/${user?.email}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/users/${user?.email}`);
       return res.data;
     }
   });
@@ -23,7 +23,7 @@ const PetDetails = () => {
   const { data: pet = {}, isLoading } = useQuery({
     queryKey: ["pet", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/pets/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/pets/${id}`);
       return res.data;
     },
   });
@@ -38,7 +38,7 @@ const PetDetails = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/pets/${id}`);
+      await axios.delete(`https://pawfect-server-beige.vercel.app/pets/${id}`);
       setShowDeleteModal(false);
       // Handle successful deletion (e.g., redirect)
     } catch (error) {
@@ -67,7 +67,7 @@ const PetDetails = () => {
     };
 
     try {
-      await axios.patch(`http://localhost:5000/pets/${id}`, updatedPet);
+      await axios.patch(`https://pawfect-server-beige.vercel.app/pets/${id}`, updatedPet);
       await queryClient.invalidateQueries(["pet", id]);
       setShowUpdateModal(false);
     } catch (error) {

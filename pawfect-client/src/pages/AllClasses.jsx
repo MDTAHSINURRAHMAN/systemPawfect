@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import { FaSearch, FaShoppingCart, FaStar, FaHeart } from "react-icons/fa";
+import { FaSearch, FaStar } from "react-icons/fa";
 
 const AllClasses = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +19,7 @@ const AllClasses = () => {
   } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/products");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/products");
       return res.data;
     },
   });
@@ -122,14 +122,14 @@ const AllClasses = () => {
                     alt={product.name}
                     className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute top-4 right-4 space-y-2">
+                  {/* <div className="absolute top-4 right-4 space-y-2">
                     <button className="bg-white p-2 rounded-full shadow-md hover:bg-orange-500 hover:text-white transition-colors duration-300">
                       <FaHeart className="text-xl" />
                     </button>
                     <button className="bg-white p-2 rounded-full shadow-md hover:bg-orange-500 hover:text-white transition-colors duration-300">
                       <FaShoppingCart className="text-xl" />
                     </button>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="p-6">
                   <div className="flex items-center mb-2">

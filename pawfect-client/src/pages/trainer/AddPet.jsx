@@ -16,7 +16,7 @@ const AddPet = () => {
   const { data: userData } = useQuery({
     queryKey: ["user", user?.email],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/users/${user?.email}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/users/${user?.email}`);
       return res.data;
     }
   });
@@ -48,7 +48,7 @@ const AddPet = () => {
         ...petData,
         addedBy: userData // Add full user data from MongoDB
       };
-      const response = await axios.post("http://localhost:5000/pets", petWithUserData);
+      const response = await axios.post("https://pawfect-server-beige.vercel.app/pets", petWithUserData);
       return response.data;
     },
     onSuccess: () => {

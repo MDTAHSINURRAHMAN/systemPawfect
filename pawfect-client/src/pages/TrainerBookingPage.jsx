@@ -19,7 +19,7 @@ const TrainerBookingPage = () => {
   } = useQuery({
     queryKey: ["trainer", id],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/volunteers/${id}`);
+      const response = await axios.get(`https://pawfect-server-beige.vercel.app/volunteers/${id}`);
       return response.data.data;
     },
   });

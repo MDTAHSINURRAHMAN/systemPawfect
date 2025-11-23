@@ -10,7 +10,7 @@ const LostPet = () => {
   const { data: lostPets = [], isLoading } = useQuery({
     queryKey: ["lostPets"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/lost-pets/admin");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/lost-pets/admin");
       return res.data;
     },
   });
@@ -18,7 +18,7 @@ const LostPet = () => {
   const updateMutation = useMutation({
     mutationFn: async (updatedPet) => {
       const res = await axios.patch(
-        `http://localhost:5000/lost-pets/${updatedPet._id}`,
+        `https://pawfect-server-beige.vercel.app/lost-pets/${updatedPet._id}`,
         updatedPet
       );
       return res.data;
@@ -35,7 +35,7 @@ const LostPet = () => {
   const statusMutation = useMutation({
     mutationFn: async (updatedPet) => {
       const res = await axios.patch(
-        `http://localhost:5000/lost-pets/status/${updatedPet._id}`,
+        `https://pawfect-server-beige.vercel.app/lost-pets/status/${updatedPet._id}`,
         { status: updatedPet.status }
       );
       return res.data;
@@ -51,7 +51,7 @@ const LostPet = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (petId) => {
-      const res = await axios.delete(`http://localhost:5000/lost-pets/${petId}`);
+      const res = await axios.delete(`https://pawfect-server-beige.vercel.app/lost-pets/${petId}`);
       return res.data;
     },
     onSuccess: () => {

@@ -15,7 +15,7 @@ const Dashboard = () => {
   const { data: userData } = useQuery({
     queryKey: ["user", user?.email],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/users/${user?.email}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/users/${user?.email}`);
       setUserRole(res.data.role);
       return res.data;
     },
@@ -363,7 +363,7 @@ const Dashboard = () => {
                   Add New Pet
                 </NavLink>
               </motion.li>
-              <motion.li whileHover={{ scale: 1.02 }}>
+              {/* <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/manage-slot"
                   className={({ isActive }) =>
@@ -377,8 +377,8 @@ const Dashboard = () => {
                   <i className="fas fa-calendar-alt"></i>
                   Manage Slots
                 </NavLink>
-              </motion.li>
-              <motion.li whileHover={{ scale: 1.02 }}>
+              </motion.li> */}
+              {/* <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/add-slot"
                   className={({ isActive }) =>
@@ -392,7 +392,7 @@ const Dashboard = () => {
                   <i className="fas fa-plus"></i>
                   Add New Slot
                 </NavLink>
-              </motion.li>
+              </motion.li> */}
               <motion.li whileHover={{ scale: 1.02 }}>
                 <NavLink
                   to="/dashboard/forums"

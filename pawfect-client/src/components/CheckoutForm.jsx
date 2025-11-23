@@ -17,7 +17,7 @@ const CheckoutForm = ({ paymentData }) => {
       if (paymentData?.packagePrice && paymentData.packagePrice > 0) {
         try {
           const { data } = await axios.post(
-            "http://localhost:5000/create-payment-intent",
+            "https://pawfect-server-beige.vercel.app/create-payment-intent",
             {
               price: paymentData.packagePrice,
             }

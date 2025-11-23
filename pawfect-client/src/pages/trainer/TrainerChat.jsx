@@ -15,7 +15,7 @@ const TrainerChat = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/volunteer-by-email/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/volunteer-by-email/${user?.email}`
       );
       return res.data;
     },
@@ -28,7 +28,7 @@ const TrainerChat = () => {
     queryFn: async () => {
       console.log("Fetching messages for volunteer ID:", volunteer._id);
       const res = await axios.get(
-        `http://localhost:5000/messages`
+        `https://pawfect-server-beige.vercel.app/messages`
       );
       // Filter messages where this volunteer is the receiver
       const filteredMessages = res.data.filter(msg => msg.receiver === volunteer._id);

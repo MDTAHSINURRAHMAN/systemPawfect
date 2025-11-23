@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import { FaShoppingCart, FaHeart, FaShare, FaStar, FaTruck, FaShieldAlt, FaUndo } from "react-icons/fa";
+import { FaShoppingCart, FaStar, FaTruck, FaShieldAlt, FaUndo } from "react-icons/fa";
 
 const ClassDetails = () => {
   const { id } = useParams();
@@ -12,7 +12,7 @@ const ClassDetails = () => {
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/products/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/products/${id}`);
       return res.data;
     },
   });
@@ -54,7 +54,7 @@ const ClassDetails = () => {
                     alt={product?.name}
                     className="w-full h-[500px] object-cover rounded-2xl shadow-lg transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute top-4 right-4 space-y-2">
+                  {/* <div className="absolute top-4 right-4 space-y-2">
                     <motion.button 
                       whileHover={{ scale: 1.1 }}
                       className="bg-white p-3 rounded-full shadow-lg hover:bg-orange-50"
@@ -67,7 +67,7 @@ const ClassDetails = () => {
                     >
                       <FaShare className="text-orange-500 text-xl" />
                     </motion.button>
-                  </div>
+                  </div> */}
                 </motion.div>
               </div>
 
@@ -126,13 +126,13 @@ const ClassDetails = () => {
                       <FaShoppingCart />
                       Buy Now
                     </motion.button>
-                    <motion.button
+                    {/* <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="px-6 py-4 border-2 border-orange-500 text-orange-500 rounded-xl font-semibold hover:bg-orange-50 transition-colors duration-300"
                     >
                       Add to Cart
-                    </motion.button>
+                    </motion.button> */}
                   </div>
                 </div>
               </div>

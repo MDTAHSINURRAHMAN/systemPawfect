@@ -22,7 +22,7 @@ const AllProducts = () => {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/products");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/products");
       return res.data;
     },
   });
@@ -30,7 +30,7 @@ const AllProducts = () => {
   // Delete product mutation
   const deleteProductMutation = useMutation({
     mutationFn: async (id) => {
-      await axios.delete(`http://localhost:5000/products/${id}`);
+      await axios.delete(`https://pawfect-server-beige.vercel.app/products/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["products"]);
@@ -45,7 +45,7 @@ const AllProducts = () => {
   // Update product mutation
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, data }) => {
-      await axios.patch(`http://localhost:5000/products/${id}`, data);
+      await axios.patch(`https://pawfect-server-beige.vercel.app/products/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["products"]);

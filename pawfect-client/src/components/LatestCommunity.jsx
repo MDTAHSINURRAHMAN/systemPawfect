@@ -12,7 +12,7 @@ const LatestCommunity = () => {
   } = useQuery({
     queryKey: ["latestPosts"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/forums?limit=6");
+      const { data } = await axios.get("https://pawfect-server-beige.vercel.app/forums?limit=6");
       return data;
     },
   });

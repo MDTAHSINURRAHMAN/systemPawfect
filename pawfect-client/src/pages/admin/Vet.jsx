@@ -27,14 +27,14 @@ const Vet = () => {
   const { data: vets = [], isLoading } = useQuery({
     queryKey: ['vets'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/vets');
+      const res = await axios.get('https://pawfect-server-beige.vercel.app/vets');
       return res.data;
     }
   });
 
   const addVetMutation = useMutation({
     mutationFn: (newVet) => {
-      return axios.post('http://localhost:5000/vets', newVet);
+      return axios.post('https://pawfect-server-beige.vercel.app/vets', newVet);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['vets']);
@@ -59,7 +59,7 @@ const Vet = () => {
 
   const deleteVetMutation = useMutation({
     mutationFn: (id) => {
-      return axios.delete(`http://localhost:5000/vets/${id}`);
+      return axios.delete(`https://pawfect-server-beige.vercel.app/vets/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['vets']);

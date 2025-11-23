@@ -12,7 +12,7 @@ const ActivityLogs = () => {
   const { data: volunteers = [], isLoading } = useQuery({
     queryKey: ["volunteers"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/all-volunteers");
+      const { data } = await axios.get("https://pawfect-server-beige.vercel.app/all-volunteers");
       return data;
     },
   });
@@ -20,7 +20,7 @@ const ActivityLogs = () => {
   const handleViewFeedback = async (volunteer) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/feedback/${volunteer.email}`
+        `https://pawfect-server-beige.vercel.app/feedback/${volunteer.email}`
       );
       setSelectedFeedback(data?.feedback || "No feedback provided");
       setShowModal(true);

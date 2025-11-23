@@ -45,7 +45,7 @@ const Newsletter = () => {
 
       // Save to MongoDB
       const response = await axios.post(
-        "http://localhost:5000/newsletter/subscribe",
+        "https://pawfect-server-beige.vercel.app/newsletter/subscribe",
         formData
       );
 

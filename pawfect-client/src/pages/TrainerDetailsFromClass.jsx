@@ -8,7 +8,7 @@ const TrainerDetailsFromClass = () => {
   const { data: trainer, isLoading } = useQuery({
     queryKey: ["trainer", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/trainers/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/trainers/${id}`);
       return res.data;
     },
   });

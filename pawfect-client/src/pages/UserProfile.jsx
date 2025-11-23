@@ -21,7 +21,7 @@ const UserProfile = () => {
     queryKey: ["user", user?.email],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:5000/users/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/users/${user?.email}`
       );
       return data;
     },
@@ -30,7 +30,7 @@ const UserProfile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/users/${user?.email}`, formData);
+      await axios.patch(`https://pawfect-server-beige.vercel.app/users/${user?.email}`, formData);
       setShowModal(false);
       refetch();
       toast.success("Profile updated successfully!");

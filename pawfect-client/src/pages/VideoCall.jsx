@@ -14,7 +14,7 @@ const VideoCall = () => {
     queryKey: ["appointment", appointmentId],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/appointments/${appointmentId}`
+        `https://pawfect-server-beige.vercel.app/appointments/${appointmentId}`
       );
       return res.data;
     },
@@ -70,13 +70,13 @@ const VideoCall = () => {
       jitsiAPI.addEventListeners({
         videoConferenceJoined: () => {
           setIsCallStarted(true);
-          axios.patch(`http://localhost:5000/appointments/${appointmentId}`, {
+          axios.patch(`https://pawfect-server-beige.vercel.app/appointments/${appointmentId}`, {
             status: "in-progress",
           });
         },
         videoConferenceLeft: () => {
           setIsCallStarted(false);
-          axios.patch(`http://localhost:5000/appointments/${appointmentId}`, {
+          axios.patch(`https://pawfect-server-beige.vercel.app/appointments/${appointmentId}`, {
             status: "completed",
           });
         },

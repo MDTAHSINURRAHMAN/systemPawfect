@@ -12,7 +12,7 @@ const NewsletterSubscribers = () => {
     queryKey: ["subscribers"],
     queryFn: async () => {
       const { data } = await axios.get(
-        "http://localhost:5000/newsletter/subscribers"
+        "https://pawfect-server-beige.vercel.app/newsletter/subscribers"
       );
       return data;
     },

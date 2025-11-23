@@ -15,7 +15,7 @@ const AppliedTrainers = () => {
     queryKey: ["pending-volunteer"],
     queryFn: async () => {
       const { data } = await axios.get(
-        "http://localhost:5000/pending-volunteers"
+        "https://pawfect-server-beige.vercel.app/pending-volunteers"
       );
       return data;
     },
@@ -23,7 +23,7 @@ const AppliedTrainers = () => {
 
   const updateVolunteerStatusMutation = useMutation({
     mutationFn: async ({ volunteerId, status }) => {
-      await axios.patch(`http://localhost:5000/volunteers/${volunteerId}`, {
+      await axios.patch(`https://pawfect-server-beige.vercel.app/volunteers/${volunteerId}`, {
         status,
       });
     },
@@ -45,7 +45,7 @@ const AppliedTrainers = () => {
     mutationFn: async ({ volunteerId, feedback }) => {
       try {
         const response = await axios.patch(
-          `http://localhost:5000/volunteers/${volunteerId}/reject`,
+          `https://pawfect-server-beige.vercel.app/volunteers/${volunteerId}/reject`,
           {
             feedback,
           }

@@ -19,7 +19,7 @@ const BookedTrainers = () => {
     queryKey: ["bookedTrainers", user?.email],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/booked-volunteers/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/booked-volunteers/${user?.email}`
       );
       return response.data;
     },
@@ -30,7 +30,7 @@ const BookedTrainers = () => {
     queryKey: ["user", user?.email],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/users/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/users/${user?.email}`
       );
       return response.data;
     },
@@ -41,7 +41,7 @@ const BookedTrainers = () => {
   const submitReview = useMutation({
     mutationFn: async (reviewData) => {
       const response = await axios.post(
-        "http://localhost:5000/reviews",
+        "https://pawfect-server-beige.vercel.app/reviews",
         reviewData
       );
       return response.data;

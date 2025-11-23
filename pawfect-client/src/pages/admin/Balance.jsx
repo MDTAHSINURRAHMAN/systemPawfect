@@ -9,7 +9,7 @@ const Balance = () => {
     queryKey: ["dashboardStats"],
     queryFn: async () => {
       const { data } = await axios.get(
-        "http://localhost:5000/admin/dashboard-stats"
+        "https://pawfect-server-beige.vercel.app/admin/dashboard-stats"
       );
       return data;
     },

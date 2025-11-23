@@ -11,7 +11,7 @@ const TrainerBooking = () => {
 
   useEffect(() => {
     // Fetch trainer data
-    fetch(`http://localhost:5000/trainers/${id}`)
+    fetch(`https://pawfect-server-beige.vercel.app/trainers/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Trainer data:", data); // Debug log
@@ -20,7 +20,7 @@ const TrainerBooking = () => {
       .catch((err) => console.error(err));
 
     // Fetch classes data
-    fetch("http://localhost:5000/classes")
+    fetch("https://pawfect-server-beige.vercel.app/classes")
       .then((res) => res.json())
       .then((data) => setClasses(data))
       .catch((err) => console.error(err));

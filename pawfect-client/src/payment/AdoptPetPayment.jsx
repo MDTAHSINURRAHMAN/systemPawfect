@@ -18,7 +18,7 @@ const AdoptPetPayment = () => {
   const { data: pet = {}, isLoading } = useQuery({
     queryKey: ["pet", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/pets/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/pets/${id}`);
       return res.data;
     },
   });
@@ -43,7 +43,7 @@ const AdoptPetPayment = () => {
   const initPaymentMutation = useMutation({
     mutationFn: async (paymentData) => {
       const response = await axios.post(
-        "http://localhost:5000/adopt-pet-payment",
+        "https://pawfect-server-beige.vercel.app/adopt-pet-payment",
         paymentData
       );
       return response.data;

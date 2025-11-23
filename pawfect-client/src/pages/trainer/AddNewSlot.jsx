@@ -20,7 +20,7 @@ const AddNewSlot = () => {
     queryKey: ["trainerProfile"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:5000/trainer-profile/${user.email}`
+        `https://pawfect-server-beige.vercel.app/trainer-profile/${user.email}`
       );
       setTrainerData(data);
       return data;
@@ -31,7 +31,7 @@ const AddNewSlot = () => {
   const { data: classes = [] } = useQuery({
     queryKey: ["adminClasses"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/classes");
+      const { data } = await axios.get("https://pawfect-server-beige.vercel.app/classes");
       return data;
     },
   });
@@ -51,7 +51,7 @@ const AddNewSlot = () => {
   const addSlotMutation = useMutation({
     mutationFn: async (slotData) => {
       const response = await axios.post(
-        `http://localhost:5000/trainer-slots/${user.email}`,
+        `https://pawfect-server-beige.vercel.app/trainer-slots/${user.email}`,
         slotData
       );
       return response.data;

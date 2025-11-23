@@ -6,7 +6,7 @@ const FeaturedClasses = () => {
   const { data: featuredClasses = [], isLoading } = useQuery({
     queryKey: ["featuredClasses"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/classes");
+      const response = await axios.get("https://pawfect-server-beige.vercel.app/classes");
       // Add random booking numbers to each class
       const classesWithBookings = response.data.map((classItem) => ({
         ...classItem,

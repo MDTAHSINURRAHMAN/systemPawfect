@@ -16,7 +16,7 @@ const TrainingPrograms = () => {
   const { data: vets = [] } = useQuery({
     queryKey: ['vets'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:5000/vets');
+      const res = await axios.get('https://pawfect-server-beige.vercel.app/vets');
       return res.data;
     }
   });
@@ -122,7 +122,7 @@ const TrainingPrograms = () => {
           className="text-center mt-12"
         >
           <Link
-            to="/vets"
+            to="/all-vets"
             className="inline-flex items-center gap-2 px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-full transition-colors text-lg font-semibold"
           >
             View All Vets

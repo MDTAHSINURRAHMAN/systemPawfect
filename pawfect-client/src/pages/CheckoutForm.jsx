@@ -22,7 +22,7 @@ const CheckoutForm = ({ paymentData, onPaymentSuccess }) => {
     if (paymentData.amount) {
       // Changed from packagePrice to amount since that's what's being passed
       axios
-        .post("http://localhost:5000/create-payment-intent", {
+        .post("https://pawfect-server-beige.vercel.app/create-payment-intent", {
           price: paymentData.amount,
           trainerId: paymentData.trainerId,
           slotId: paymentData.slotId,

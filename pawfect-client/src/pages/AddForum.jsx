@@ -17,7 +17,7 @@ const AddForum = () => {
   const createForum = useMutation({
     mutationFn: async (forumData) => {
       const response = await axios.post(
-        "http://localhost:5000/forums",
+        "https://pawfect-server-beige.vercel.app/forums",
         forumData
       );
       return response.data;

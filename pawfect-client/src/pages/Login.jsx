@@ -97,11 +97,11 @@ const Login = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <Link to="/forgot-password" className="text-sm text-[#FF640D] hover:underline">
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
 
               <motion.button 
                 whileHover={{ scale: 1.02 }}

@@ -5,7 +5,7 @@ const SalesReport = () => {
   const { data: payments = [], isLoading } = useQuery({
     queryKey: ["payments"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/product-payments");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/product-payments");
       return res.data;
     }
   });

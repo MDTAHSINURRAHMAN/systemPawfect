@@ -8,7 +8,7 @@ const AllTrainer = () => {
   const [volunteers, setVolunteers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/volunteers")
+    fetch("https://pawfect-server-beige.vercel.app/volunteers")
       .then((res) => res.json())
       .then((data) => setVolunteers(data))
       .catch((err) => console.error(err));
@@ -66,10 +66,10 @@ const AllTrainer = () => {
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-24 group-hover:translate-y-0 transition-transform duration-500">
-                  <div className="flex items-center gap-2 mb-3">
+                  {/* <div className="flex items-center gap-2 mb-3">
                     <FaMapMarkerAlt className="text-[#FF640D]" />
                     <span className="text-sm">New York, USA</span>
-                  </div>
+                  </div> */}
 
                   <h3 className="text-2xl font-bold mb-2">{volunteer.name || volunteer.fullName}</h3>
                   

@@ -98,7 +98,7 @@ const BeATrainer = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/volunteers", {
+      const response = await fetch("https://pawfect-server-beige.vercel.app/volunteers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

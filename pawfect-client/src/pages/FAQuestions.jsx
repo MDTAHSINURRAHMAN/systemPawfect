@@ -9,7 +9,7 @@ const FAQuestions = () => {
   const { data: faqs = [] } = useQuery({
     queryKey: ["faqs"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/faqs");
+      const res = await axios.get("https://pawfect-server-beige.vercel.app/faqs");
       return res.data;
     },
   });

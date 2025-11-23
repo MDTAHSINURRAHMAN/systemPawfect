@@ -20,7 +20,7 @@ const VetDetails = () => {
   const { data: vet, isLoading } = useQuery({
     queryKey: ['vet', id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/vets/${id}`);
+      const res = await axios.get(`https://pawfect-server-beige.vercel.app/vets/${id}`);
       return res.data;
     }
   });
@@ -48,7 +48,7 @@ const VetDetails = () => {
         createdAt: new Date()
       };
 
-      await axios.post('http://localhost:5000/appointments', appointmentData);
+      await axios.post('https://pawfect-server-beige.vercel.app/appointments', appointmentData);
       alert('Appointment booked successfully!');
       
       // Reset form

@@ -8,7 +8,7 @@ const Team = () => {
     queryKey: ["trainers"],
     queryFn: async () => {
       const response = await axios.get(
-        "http://localhost:5000/trainers?limit=3"
+        "https://pawfect-server-beige.vercel.app/trainers?limit=3"
       );
       return response.data;
     },

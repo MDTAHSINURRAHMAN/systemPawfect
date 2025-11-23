@@ -21,7 +21,7 @@ const ForumDetails = () => {
   } = useQuery({
     queryKey: ["forum", id],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/forums/${id}`);
+      const response = await axios.get(`https://pawfect-server-beige.vercel.app/forums/${id}`);
       return response.data;
     },
   });
@@ -29,7 +29,7 @@ const ForumDetails = () => {
   const { data: comments = [] } = useQuery({
     queryKey: ["comments", id],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/forums/${id}/comments`);
+      const response = await axios.get(`https://pawfect-server-beige.vercel.app/forums/${id}/comments`);
       return response.data;
     }
   });
@@ -37,7 +37,7 @@ const ForumDetails = () => {
   const voteMutation = useMutation({
     mutationFn: async ({ voteType }) => {
       const response = await axios.post(
-        `http://localhost:5000/forums/${id}/vote`,
+        `https://pawfect-server-beige.vercel.app/forums/${id}/vote`,
         {
           userId: user?._id,
           voteType,
@@ -57,7 +57,7 @@ const ForumDetails = () => {
   const commentMutation = useMutation({
     mutationFn: async (commentData) => {
       const response = await axios.post(
-        `http://localhost:5000/forums/${id}/comments`,
+        `https://pawfect-server-beige.vercel.app/forums/${id}/comments`,
         commentData
       );
       return response.data;
@@ -76,7 +76,7 @@ const ForumDetails = () => {
   const commentVoteMutation = useMutation({
     mutationFn: async ({ commentId, voteType }) => {
       const response = await axios.post(
-        `http://localhost:5000/forums/${id}/comments/${commentId}/vote`,
+        `https://pawfect-server-beige.vercel.app/forums/${id}/comments/${commentId}/vote`,
         {
           userId: user?._id,
           voteType,

@@ -14,7 +14,7 @@ const Appointments = () => {
     queryKey: ["appointments", user?.email],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/appointments/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/appointments/${user?.email}`
       );
       return res.data;
     },
@@ -22,7 +22,7 @@ const Appointments = () => {
 
   const handleStatusChange = async (appointmentId, newStatus) => {
     try {
-      await axios.patch(`http://localhost:5000/appointments/${appointmentId}`, {
+      await axios.patch(`https://pawfect-server-beige.vercel.app/appointments/${appointmentId}`, {
         status: newStatus,
       });
       queryClient.invalidateQueries(["appointments", user?.email]);
@@ -35,7 +35,7 @@ const Appointments = () => {
     try {
       // Create a call session
       const response = await axios.post(
-        `http://localhost:5000/video-calls/initiate`,
+        `https://pawfect-server-beige.vercel.app/video-calls/initiate`,
         {
           appointmentId: appointment._id,
           vetId: user?.email,
@@ -46,7 +46,7 @@ const Appointments = () => {
 
       // Notify the user about incoming call
       await axios.patch(
-        `http://localhost:5000/appointments/${appointment._id}`,
+        `https://pawfect-server-beige.vercel.app/appointments/${appointment._id}`,
         {
           status: "calling",
           videoCallStatus: "initiated",

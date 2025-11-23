@@ -12,7 +12,7 @@ import { auth } from "../firebase/firebaseConfig";
 
 export const AuthContext = createContext();
 
-const apiUrl = 'http://localhost:5000';
+const apiUrl = 'https://pawfect-server-beige.vercel.app';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);

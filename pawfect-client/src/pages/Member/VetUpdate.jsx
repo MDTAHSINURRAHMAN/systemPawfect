@@ -14,7 +14,7 @@ const VetUpdate = () => {
     queryKey: ["userAppointments", user?.email],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/appointments/user/${user?.email}`
+        `https://pawfect-server-beige.vercel.app/appointments/user/${user?.email}`
       );
       return res.data;
     },
@@ -25,7 +25,7 @@ const VetUpdate = () => {
     const checkForCalls = setInterval(async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/appointments/active-calls/${user?.email}`
+          `https://pawfect-server-beige.vercel.app/appointments/active-calls/${user?.email}`
         );
 
         const incomingCall = response.data;
@@ -38,14 +38,14 @@ const VetUpdate = () => {
           if (accept) {
             // Update call status and redirect to video call
             await axios.patch(
-              `http://localhost:5000/appointments/${incomingCall._id}`,
+              `https://pawfect-server-beige.vercel.app/appointments/${incomingCall._id}`,
               { videoCallStatus: "accepted" }
             );
             navigate(`/video-call/${incomingCall._id}`);
           } else {
             // Decline the call
             await axios.patch(
-              `http://localhost:5000/appointments/${incomingCall._id}`,
+              `https://pawfect-server-beige.vercel.app/appointments/${incomingCall._id}`,
               { videoCallStatus: "declined" }
             );
             toast.error("Call declined");
@@ -62,7 +62,7 @@ const VetUpdate = () => {
   const handleDownloadPDF = async (appointmentId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/prescriptions/${appointmentId}/pdf`
+        `https://pawfect-server-beige.vercel.app/prescriptions/${appointmentId}/pdf`
       );
 
       const { pdfData, appointment } = response.data;
